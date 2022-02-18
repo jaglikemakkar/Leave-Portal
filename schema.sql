@@ -1,24 +1,32 @@
-CREATE TABLE User(
+CREATE TABLE user(
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30),
     username VARCHAR(30) UNIQUE,
-    level INTEGER,
+    position VARCHAR(10),
     department VARCHAR(10),
     total_leaves INTEGER,
     available_leaves INTEGER
-)
+);
 
-CREATE TABLE Leaves(
+CREATE TABLE leaves(
     leave_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id VARCHAR(30),
+    user_id INT,
     nature VARCHAR(10),
-    purpose VARCHAR(500),
-    is_station BOOLEAN,
+    purpose VARCHAR(200),
+    is_station INT,
     request_date TIMESTAMP,
     start_date_of TIMESTAMP,
-    authority_comment VARCHAR
-    duration_of_leave INTEGER,
-    status BOOLEAN,
+    authority_comment VARCHAR(200),
+    duration_of_leave INT,
+    status INT,
     level INT,
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
-)
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
+CREATE TABLE log(
+
+);
+
+CREATE TABLE user_auth(
+    username VARCHAR(30) PRIMARY KEY
+);
