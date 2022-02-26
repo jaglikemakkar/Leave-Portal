@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, url_for, request, session, redirect
+from flask import Flask, jsonify, render_template, url_for, request, session, redirect, Response
 from flask_pymongo import PyMongo
 from matplotlib.pyplot import connect
 from pymongo import MongoClient
@@ -6,6 +6,8 @@ from flaskext.mysql import MySQL
 from authlib.integrations.flask_client import OAuth
 from flask_cors import CORS, cross_origin
 import bcrypt
+import random
+import smtplib
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -15,7 +17,8 @@ oauth = OAuth(app)
 
 credentials = open("C:\\Academics\\6th Sem\\CP301_DP\\oAuthCredentials.txt").readlines()
 my_client_id = credentials[0].strip()
-my_secret = credentials[1].strip() 
+my_secret = credentials[1].strip()
+
 google = oauth.register(
     name='google',
     client_id=my_client_id,
@@ -35,53 +38,82 @@ app.config['MYSQL_DATABASE_DB'] = 'dep'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 db = MySQL(app)
 
-@app.route('/')
-def home():
-    return render_template('home.html')
+success_code = Response(status=200)
+failiure_code = Response(status=400)
 
-@app.route('/login', methods = ['GET', 'POST'])
-def login():
-    print("=======================================")
-    google = oauth.create_client('google')  # create the google oauth client
-    print("=======================================")
-    redirect_uri = url_for('authorize', _external=True)
-    print("=======================================")
-    return google.authorize_redirect(redirect_uri)
 
-@app.route('/authorize')
-def authorize():
-    print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
-    google = oauth.create_client('google')  # create the google oauth client
-    token = google.authorize_access_token()  # Access token from google (needed to get user info)
-    resp = google.get('userinfo')  # userinfo contains stuff u specificed in the scope
-    user_info = resp.json()
-    user = oauth.google.userinfo()  # uses openid endpoint to fetch user info
-    
-    print('============= USER INFO ==============')
-    print(user_info, '\n')
-    email_id = user_info['email']
+def is_valid_email(email_id):
     connect = db.connect()
     cursor = connect.cursor()
     cursor.execute("SELECT * FROM user_auth WHERE email_id = %s",(email_id))
     data = cursor.fetchall()
     if not data:
         session.clear()
-        return jsonify({"error": "Unauthorized"}), 401
+        return 0
     else:
+        return 1
+
+def get_user_data(email_id):
+    connect = db.connect()
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM user WHERE email_id = %s",(email_id))
+    data = cursor.fetchall()
+    return data
+    
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+@app.route('/login_oauth', methods = ['POST'])
+def login_oauth():
+    user_info = request.json["user_info"]
+    email = user_info['email']
+    if is_valid_email(email):
         session['logged_in'] = True
-        session['profile'] = user_info
+        session['user_info'] = user_info
         session.permanent = True
-        print('============= SESSION ==============')
-        print(session, '\n')
-        print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
-        return jsonify(user_info)
+        data = get_user_data(email)
+        return jsonify(data)
+    else:
+        return failiure_code
+
+
+OriginalOTP = -1
+def send_otp(email):
+    global OriginalOTP
+    OTP = random.randint(10**5,10**6-1)
+    OriginalOTP = OTP
+    msg = "You OTP is " + str(OTP)
+    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s.starttls()
+    s.login("sangramjagadale2017@gmail.com", "ifitfwphppuwtgfl")
+    s.sendmail('IIT Rpr Leave OTP',email,msg)
+
+@app.route('/login_otp', methods = ['POST'])
+def login_otp():
+    email = request.json['email']
+    if is_valid_email(email):
+        send_otp(email)
+        return success_code
+    else:
+        return failiure_code
+
+@app.route('/validate_otp' , methods = ['POST'])
+def validate_otp():
+    otp = request.json['otp']
+    print(otp , OriginalOTP,'==================')
+    if str(otp) == str(OriginalOTP):
+        return success_code
+    else:
+        return failiure_code
 
 @app.route('/@me')
 def get_current_user():
-    if 'profile' in session:
-        return jsonify(session['profile'])
+    if 'user_info' in session:
+        return jsonify(session['user_info'])
     else:
-        return None
+        return jsonify("")
 
 # @app.route('/register', methods=['POST', 'GET'])
 # def register():
