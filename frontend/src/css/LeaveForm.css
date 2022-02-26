@@ -1,0 +1,28 @@
+.formWrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+.leaveform {
+    width: 70%;
+    margin: 50px;
+    padding: 50px 50px;
+    outline: none;
+    font-family: Roboto, Arial, sans-serif;
+    /* font-size: 16px; */
+    /* color: #666; */
+}
+
+form{
+    margin: 50px 0px;
+}
+
+legend{
+    font-size:15px;
+    text-align: left;
+}
+
+.cardbody-color {
+    background-color: #ebf2fa;
+}

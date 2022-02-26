@@ -1,6 +1,5 @@
 import React from 'react';
 import httpClient from "../httpClient";
-import GoogleLogin from 'react-google-login';
 
 export default function LoginForm() {
   const otpVerify = async (e) => {

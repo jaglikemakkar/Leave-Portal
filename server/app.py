@@ -15,22 +15,22 @@ CORS(app, supports_credentials=True)
 # oAuth Setup
 oauth = OAuth(app)
 
-credentials = open("C:\\Academics\\6th Sem\\CP301_DP\\oAuthCredentials.txt").readlines()
-my_client_id = credentials[0].strip()
-my_secret = credentials[1].strip()
+# credentials = open("C:\\Academics\\6th Sem\\CP301_DP\\oAuthCredentials.txt").readlines()
+# my_client_id = credentials[0].strip()
+# my_secret = credentials[1].strip()
 
-google = oauth.register(
-    name='google',
-    client_id=my_client_id,
-    client_secret=my_secret,
-    access_token_url='https://accounts.google.com/o/oauth2/token',
-    access_token_params=None,
-    authorize_url='https://accounts.google.com/o/oauth2/auth',
-    authorize_params=None,
-    api_base_url='https://www.googleapis.com/oauth2/v1/',
-    userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',  # This is only needed if using openId to fetch user info
-    client_kwargs={'scope': 'openid email profile'},
-)
+# google = oauth.register(
+#     name='google',
+#     client_id=my_client_id,
+#     client_secret=my_secret,
+#     access_token_url='https://accounts.google.com/o/oauth2/token',
+#     access_token_params=None,
+#     authorize_url='https://accounts.google.com/o/oauth2/auth',
+#     authorize_params=None,
+#     api_base_url='https://www.googleapis.com/oauth2/v1/',
+#     userinfo_endpoint='https://openidconnect.googleapis.com/v1/userinfo',  # This is only needed if using openId to fetch user info
+#     client_kwargs={'scope': 'openid email profile'},
+# )
 
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'jaglike'
@@ -59,7 +59,23 @@ def get_user_data(email_id):
     cursor.execute("SELECT * FROM user WHERE email_id = %s",(email_id))
     data = cursor.fetchall()
     return data
-    
+
+def insert_leave(l):
+    connect = db.connect()
+    cursor = connect.cursor()
+    print('hhh',l)
+    cursor.execute("SELECT user_id, department FROM user WHERE email_id = %s",(l['email']))
+    data = cursor.fetchall()
+    user_id = data[0][0]
+    department = data[0][1]
+
+    cursor.execute("INSERT INTO leaves\
+        (department, user_id, nature, purpose, is_station, request_date, start_date, end_date, duration, status, level) \
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        (department, user_id, l['nature'], l['purpose'], l['isStation'], l['rdate'], l['sdate'], l['edate'], l['duration'], 'Pending', 'Faculty'))
+    connect.commit()
+    return 1
+
 
 @app.route('/')
 def home():
@@ -114,6 +130,15 @@ def get_current_user():
         return jsonify(session['user_info'])
     else:
         return jsonify("")
+
+@app.route('/leave_application', methods=['POST'])
+def leave_application():
+    leave = request.json['state']
+    status = insert_leave(leave)
+    if status:
+        return success_code
+    else:
+        return failiure_code
 
 # @app.route('/register', methods=['POST', 'GET'])
 # def register():

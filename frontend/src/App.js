@@ -6,6 +6,7 @@ import Intro from "./components/Intro.js"
 import Dashboard from "./components/Dashboard.js"
 import LoginForm from "./components/LoginForm.js"
 import OtpVerification from "./components/OtpVerification.js"
+import LeaveForm from "./components/LeaveForm.js"
 
 import Navbar from './components/Navbar.js'
 import './css/App.css';
@@ -33,6 +34,7 @@ function App() {
         <Route path="/login" exact element={<LoginForm />} />
         <Route path="/dashboard" exact element={<Dashboard />} />
         <Route path="/otpVerification" exact element={<OtpVerification />} />
+        <Route path="/leaveForm" exact element={<LeaveForm />} />
         {/* <Route component={NotFound} /> */}
       </Routes>
     </BrowserRouter>
