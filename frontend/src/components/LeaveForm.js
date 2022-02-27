@@ -97,7 +97,7 @@ export default function LeaveForm() {
 
   return (
     <div className="formWrapper">
-      <div className="leaveform cardbody-color">
+      <div className="leaveform cardbody-color" style={{border: "2px solid black"}}>
         <h1>Leave Form</h1>
         <form>
           <div className="form-row">

@@ -90,6 +90,7 @@ def login_oauth():
         session['user_info'] = user_info
         session.permanent = True
         data = get_user_data(email)
+        print("======", session)
         return jsonify(data)
     else:
         return failiure_code
@@ -100,7 +101,7 @@ def send_otp(email):
     global OriginalOTP
     OTP = random.randint(10**5,10**6-1)
     OriginalOTP = OTP
-    msg = "You OTP is " + str(OTP)
+    msg = "Your OTP for IIT Rpr Leave Management Portal is " + str(OTP)
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.starttls()
     s.login("sangramjagadale2017@gmail.com", "ifitfwphppuwtgfl")
@@ -127,6 +128,7 @@ def validate_otp():
 @app.route('/@me')
 def get_current_user():
     if 'user_info' in session:
+        print("HHHH", session['user_info'])
         return jsonify(session['user_info'])
     else:
         return jsonify("")
@@ -139,6 +141,43 @@ def leave_application():
         return success_code
     else:
         return failiure_code
+        
+@app.route('/dashboard',methods = ["POST","GET"])
+def dashboard():
+    print('================' , session)
+    email = session['user_info']['email']
+    user_data = get_user_data(email)
+    user_data = user_data[0]
+    print(user_data)
+
+    data = dict()
+    data['name'] = user_data[1]
+    data['email'] = user_data[2]
+    data['level'] = user_data[3]
+    data['department'] = user_data[4]
+    data['total_leaves'] = user_data[5]
+    data['av_leaves'] = user_data[6]
+    data['imageURL'] = session['user_info']['imageUrl']
+
+    return jsonify(data)
+
+@app.route('/fetchLeaves', methods = ['POST'])
+def fetchLeaves():
+    user_id = request.json['user_id']
+    print("f",request.json['user_id'])
+    connect = db.connect()
+    cursor = connect.cursor()
+    cursor.execute("SELECT * FROM leaves WHERE user_id = %s",(user_id))
+    data = cursor.fetchall()
+    payload = []
+    for i in data:
+        # department, user_id, nature, purpose, is_station, request_date, start_date, end_date, duration, status, level
+        print("HHHHHHHHH", i)
+        content = {'id': i[0], 'department': i[1], 'user_id': i[2],'nature': i[3],'purpose': i[4],'is_station': i[5],'request_date': i[6],'start_date': i[7],'end_date': i[8], 'authority_comment': i[9], 'duration': i[10],'status': i[11],'level': i[12]}
+        payload.append(content)
+        
+    print(payload)
+    return jsonify(result=payload)
 
 # @app.route('/register', methods=['POST', 'GET'])
 # def register():
@@ -163,7 +202,7 @@ def leave_application():
 @app.route('/logout')
 def logout():
     session.clear()
-    return render_template('home.html')
+    return success_code
 
 if __name__ == '__main__':
     app.secret_key='secret123'

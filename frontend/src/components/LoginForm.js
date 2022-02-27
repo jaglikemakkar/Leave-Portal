@@ -10,6 +10,7 @@ export default function LoginForm() {
       const user_info = res.profileObj
       const resp = await httpClient.post("//localhost:5000/login_oauth", { user_info });
       console.log("HHHH", resp);
+      window.location.href = "/dashboard";
     } catch (error) {
       if (error.response.status === 400) {
         alert("Invalid credentials");
@@ -20,7 +21,7 @@ export default function LoginForm() {
     try {
       e.preventDefault()
       const email = document.getElementById("Username").value;
-      const resp = await httpClient.post("//localhost:5000/login_otp", {email});
+      const resp = await httpClient.post("//localhost:5000/login_otp", { email });
       console.log("HHHHHHHHH", resp);
       window.location.href = '/otpVerification';
     } catch (error) {
@@ -33,7 +34,7 @@ export default function LoginForm() {
     <div>
       <div className="row">
         <div className="col-md-6 offset-md-3">
-          <div className="card my-4">
+          <div className="card my-4" >
             <form className="card-body cardbody-color px-5 " method="POST">
               <h2 className="text-center text-dark mt-5">Login</h2>
               <div className="text-center">
@@ -48,20 +49,21 @@ export default function LoginForm() {
               </div>
               <div className="text-center"><button onClick={otpLogin}
                 className="btn btn-primary px-5 mb-5 w-100">Login</button></div>
+              <GoogleLogin clientId="1055217702575-fejsv10ueq0tt48aatj1ln1p35nogder.apps.googleusercontent.com"
+                buttonText="Login with Google"
+                onSuccess={responseGoogle}
+                onFailure={responseGoogle}
+                cookiePolicy={'single_host_origin'}
+              />
               <div id="emailHelp" className="form-text text-center mb-5 text-dark">Not
                 Registered? <a href="register" className="text-dark fw-bold"> Create an
                   Account</a>
               </div>
             </form>
+            {/* <p>HEREEEE</p> */}
           </div>
         </div>
       </div>
-      <GoogleLogin clientId="1055217702575-fejsv10ueq0tt48aatj1ln1p35nogder.apps.googleusercontent.com"
-        buttonText="Login with Google"
-        onSuccess={responseGoogle}
-        onFailure={responseGoogle}
-        cookiePolicy={'single_host_origin'}
-      />
     </div>
   )
 }

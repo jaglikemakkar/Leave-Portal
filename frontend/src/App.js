@@ -7,18 +7,28 @@ import Dashboard from "./components/Dashboard.js"
 import LoginForm from "./components/LoginForm.js"
 import OtpVerification from "./components/OtpVerification.js"
 import LeaveForm from "./components/LeaveForm.js"
+import DisplayLeaves from "./components/DisplayLeaves.js"
 
 import Navbar from './components/Navbar.js'
 import './css/App.css';
 
 function App() {
-  const [user, setUser] = useState(new Map());
+  const [user, setUser] = useState({
+    email: "",
+    firstName: "",
+    lastName: "",
+    imageUrl: ""
+  });
   useEffect(() => {
     (async () => {
       try {
         const resp = await httpClient.get("//localhost:5000/@me");
-        setUser(resp.data);
-        console.log("USERRRRRRR", user)
+        const data = resp.data;
+        setUser(prevUser=> ({ ...prevUser, email: data['email'] }));
+        setUser(prevUser=> ({ ...prevUser, firstName: data['givenName'] }));
+        setUser(prevUser=> ({ ...prevUser, lastName: data['familyName'] }));
+        setUser(prevUser=> ({ ...prevUser, imageUrl: data['imageUrl'] }));
+        console.log("USER", user);
       } catch (error) {
         console.log("Not authenticated"); 
       }
@@ -35,6 +45,7 @@ function App() {
         <Route path="/dashboard" exact element={<Dashboard />} />
         <Route path="/otpVerification" exact element={<OtpVerification />} />
         <Route path="/leaveForm" exact element={<LeaveForm />} />
+        <Route path="/displayLeaves" exact element={<DisplayLeaves />} />
         {/* <Route component={NotFound} /> */}
       </Routes>
     </BrowserRouter>
