@@ -34,7 +34,7 @@
 #rightbox{
     float:right;
     
-    width:35%;
+    width:25%;
     
     height:auto;
     white-space: nowrap;
@@ -43,13 +43,13 @@
     padding: 0.2rem;
 }
 
-.list-group li:nth-child(even){
+/* .list-group li:nth-child(even){
     background-color: azure !important;
-  }
+  } */
 
-  .list-group li:nth-child(odd){
-    background-color: white !important;
-  }
+  /* .list-group li:nth-child(odd){
+    background-color: lightblue !important;
+  } */
 
 /* #leftbox {
     float:left; 

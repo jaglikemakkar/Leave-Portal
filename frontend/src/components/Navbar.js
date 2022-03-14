@@ -22,7 +22,7 @@ export default function Navbar({user}) {
               <a className="nav-link" href="/">Home <span className="sr-only">(current)</span></a>
             </li>
             {(user.email == "" || user.email==undefined) ? (''):(<li className="nav-item px-2"> <a className="nav-link" href="/dashboard">Dashboard</a> </li>)}
-            <li className="nav-item px-2 dropdown">
+            {/* <li className="nav-item px-2 dropdown">
               <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                 data-toggle="dropdown" aria-expanded="false">
                 Dropdown
@@ -33,14 +33,14 @@ export default function Navbar({user}) {
                 <div className="dropdown-divider"></div>
                 <a className="dropdown-item" href="#">Something else here</a>
               </div>
-            </li>
+            </li> */}
             {/* <li className="nav-item px-2"><a className="nav-link disabled">Disabled</a></li> */}
-            <li className="nav-item px-2">
+            {/* <li className="nav-item px-2">
               <form className="form-inline my-2 my-lg-0">
                 <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
                 <button className="btn btn-outline-secondary btn-light my-2 my-sm-0" type="submit">Search</button>
               </form>
-            </li>
+            </li> */}
           </ul>
           {(user.email == "" || user.email==undefined) ? (
             <ul className="navbar-nav justify-content-right">

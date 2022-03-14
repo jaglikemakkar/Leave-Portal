@@ -8,6 +8,7 @@ import LoginForm from "./components/LoginForm.js"
 import OtpVerification from "./components/OtpVerification.js"
 import LeaveForm from "./components/LeaveForm.js"
 import DisplayLeaves from "./components/DisplayLeaves.js"
+import CheckLeaves from "./components/CheckLeaves.js"
 
 import Navbar from './components/Navbar.js'
 import './css/App.css';
@@ -46,6 +47,7 @@ function App() {
         <Route path="/otpVerification" exact element={<OtpVerification />} />
         <Route path="/leaveForm" exact element={<LeaveForm />} />
         <Route path="/displayLeaves" exact element={<DisplayLeaves />} />
+        <Route path="/checkLeaves" exact element={<CheckLeaves />} />
         {/* <Route component={NotFound} /> */}
       </Routes>
     </BrowserRouter>
