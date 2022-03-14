@@ -63,7 +63,6 @@ def get_user_data(email_id):
 def insert_leave(l):
     connect = db.connect()
     cursor = connect.cursor()
-    print('hhh',l)
     cursor.execute("SELECT user_id, department FROM user WHERE email_id = %s",(l['email']))
     data = cursor.fetchall()
     user_id = data[0][0]
@@ -164,7 +163,6 @@ def dashboard():
 @app.route('/fetchLeaves', methods = ['POST'])
 def fetchLeaves():
     user_id = request.json['user_id']
-    print("f",request.json['user_id'])
     connect = db.connect()
     cursor = connect.cursor()
     cursor.execute("SELECT * FROM leaves WHERE user_id = %s",(user_id))
@@ -172,13 +170,46 @@ def fetchLeaves():
     payload = []
     for i in data:
         # department, user_id, nature, purpose, is_station, request_date, start_date, end_date, duration, status, level
-        print("HHHHHHHHH", i)
         content = {'id': i[0], 'department': i[1], 'user_id': i[2],'nature': i[3],'purpose': i[4],'is_station': i[5],'request_date': i[6],'start_date': i[7],'end_date': i[8], 'authority_comment': i[9], 'duration': i[10],'status': i[11],'level': i[12]}
         payload.append(content)
         
-    print(payload)
     return jsonify(result=payload)
 
+@app.route('/check_leaves',methods = ['GET','POST'])
+def check_leaves():
+    email = session['user_info']['email']
+    data = get_user_data(email)[0]
+    user_id = data[0]
+    user_id = request.json['user_id']
+    connect = db.connect()
+    cursor = connect.cursor()
+    cursor.execute('SELECT department FROM user WHERE user_id = %s',(user_id))
+    department = cursor.fetchall()[0][0]
+    cursor.execute('SELECT * FROM leaves WHERE\
+         department = %s and status = %s and level = %s',(department,"pending", "Faculty"))
+    leaves = cursor.fetchall()
+    payload = []
+    for i in leaves:
+        content = {'id': i[0], 'department': i[1], 'user_id': i[2],'nature': i[3],'purpose': i[4],'is_station': i[5],'request_date': i[6],'start_date': i[7],'end_date': i[8], 'authority_comment': i[9], 'duration': i[10],'status': i[11],'level': i[12]}
+        user_id = i[2]
+        connect = db.connect()
+        cursor = connect.cursor()
+        cursor.execute('SELECT email_id FROM user WHERE user_id = %s',(user_id))
+        data = cursor.fetchall()
+        email = data[0][0]
+        content['email'] = email
+        payload.append(content)
+    return jsonify(result = payload)
+
+@app.route('/approve_leave', methods = ['POST'])
+def approve_leave():
+    leave_id = request.json['leave_id']
+    connect = db.connect()
+    cursor = connect.cursor()
+    cursor.execute("UPDATE leaves SET status = 'Approved By Hod' WHERE leave_id = %s",(leave_id))
+    connect.commit()
+    return success_code
+    
 # @app.route('/register', methods=['POST', 'GET'])
 # def register():
 #     if request.method == 'POST':
