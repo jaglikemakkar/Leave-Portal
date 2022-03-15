@@ -1,7 +1,7 @@
 CREATE TABLE user(
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30),
-    email_id VARCHAR(30) UNIQUE,
+    email_id VARCHAR(50) UNIQUE,
     position VARCHAR(30),
     department VARCHAR(10),
     total_leaves INTEGER,
@@ -30,5 +30,5 @@ CREATE TABLE leaves(
 -- );
 
 CREATE TABLE user_auth(
-    email_id VARCHAR(30) PRIMARY KEY
+    email_id VARCHAR(50) PRIMARY KEY
 );

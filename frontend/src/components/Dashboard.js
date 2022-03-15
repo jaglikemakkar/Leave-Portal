@@ -8,22 +8,24 @@ import '../css/Dashboard.css';
 // import Container from 'react-bootstrap/Container';
 // import 'bootstrap/dist/css/bootstrap.min.css'
 
-export default function Dashboard() {
-  const [user_data, setCurrentTime] = useState({
-    email: "",
-    name: "jaglike",
+export default function Dashboard( {user} ) {
+
+  const [user_data, set_user_data] = useState({
+    imageURL: user.imageURL,
+    name: user.firstName,
+    email: user.email,
     level: "faculty",
     department: "cse",
     total_leaves: 0,
     av_leaves: 0,
   });
 
+
   useEffect(() => {
     (async () => {
       try{
       const resp = await httpClient.get("//localhost:5000/dashboard");
-      console.log("Dashboard", resp);
-      setCurrentTime(resp.data);}
+      set_user_data(resp.data);}
       catch{
         window.location.href="/login"
       }
@@ -34,8 +36,8 @@ export default function Dashboard() {
     <div className="dashboard" style={{ height: "100vh", backgroundImage: `url(${background})`, backgroundPosition: "fixed", backgroundRepeat: "None", backgroundSize: "cover" }}>
     {/* <div className="Dashboard"> */}
       {/* <header className="jumbotron text-center"> */}
-      <h2 class="heading">Dashboard</h2>
-      <div class="heading-line"></div>
+      <h2 className="heading">Dashboard</h2>
+      <div className="heading-line"></div>
       {/* <p>The current time is {user_data.av_leaves} </p>  */}
       {/* </header> */}
       {/* <div className="container row" style={{ margin: "auto" }}>
@@ -115,8 +117,8 @@ export default function Dashboard() {
               <div className="card" style={{"border": "2px solid grey"}}>
                 <div className="card-body">
                   <div className="d-flex flex-column align-items-center text-center">
-                  {(user_data.imageURL == "" || user_data.imageURL==undefined) ? (<img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" className="rounded-circle" width="150" />)
-                  : (<img src={user_data.imageURL} alt="Admin" className="rounded-circle" width="150" />)}
+                  {(user.imageURL == "" || user.imageURL==undefined) ? (<img src={require("../imgs/loginIcon.png")} alt="Admin" className="rounded-circle" width="150" />)
+                  : (<img src={user.imageURL} alt="Admin" className="rounded-circle" width="150" />)}
                     
                     {/* <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" className="rounded-circle" width="150" /> */}
                     <div className="mt-3">
@@ -208,11 +210,11 @@ export default function Dashboard() {
                   <div className="row">
                     <div className="col-sm-12" >
                     {(user_data.level == "faculty" || user_data.level==undefined || user_data.level == "") ? (
-                      <a className="btn btn-info " style={{"margin": "2px"}} target="__blank" href="displayLeaves">Applied Leaves</a>
+                      <a className="btn btn-info " style={{"margin": "2px"}} href="displayLeaves">Applied Leaves</a>
                       ):(
                         <div>
-                        <a className="btn btn-info " style={{"margin": "2px"}} target="__blank" href="displayLeaves">Applied Leaves</a>
-                      <a className="btn btn-info " style={{"margin": "2px"}} target="__blank" href="checkLeaves">Check Leaves</a>
+                        <a className="btn btn-info " style={{"margin": "2px"}} href="displayLeaves">Applied Leaves</a>
+                      <a className="btn btn-info " style={{"margin": "2px"}} href="checkLeaves">Check Leaves</a>
                       </div>
                       )}
                     </div>

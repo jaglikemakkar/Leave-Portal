@@ -3,19 +3,19 @@ import httpClient from "../httpClient";
 import '../css/LeaveForm.css';
 import { isDate, isEmail, isName } from "./helpers/validators";
 
-export default function LeaveForm() {
+export default function LeaveForm({user}) {
   const [state, setState] = useState({
-    name: "Jaglike",
-    email: "2019csb1092@iitrpr.ac.in",
-    phone: "7814245626",
-    duration: "2",
+    name: user.firstName,
+    email: user.email,
+    phone: "",
+    duration: "",
     rdate: (new Date()).toISOString().substr(0, 10),
     sdate: (new Date()).toISOString().substr(0, 10),
     edate: (new Date()).toISOString().substr(0, 10),
-    nature: "CL",
-    isStation: "Yes",
-    purpose: "This is the purpose",
-    altArrangements: "These are the alternative arrangements.",
+    nature: "",
+    isStation: "",
+    purpose: "",
+    altArrangements: "",
     errorMsg: "",
   });
 
@@ -81,23 +81,36 @@ export default function LeaveForm() {
     setState(prevState=> ({ ...prevState, edate: edate }));
     setState(prevState=> ({ ...prevState, purpose: purpose }));
     setState(prevState=>({ ...prevState, altArrangements: altArrangements }));
+
+    const myObj = {
+      name: name,
+      email: email,
+      phone: phone,
+      duration: duration,
+      rdate: (new Date()).toISOString().substr(0, 10),
+      sdate: sdate,
+      edate: edate,
+      nature: nature,
+      isStation: isStation,
+      purpose: purpose,
+      altArrangements: altArrangements,
+    }
     console.log("State: ", state);
+    console.log("My Obj: ", myObj);
 
     document.querySelector('.leaveform button').classList.add('disabled');
-    
     try {
-      const resp = await httpClient.post("//localhost:5000/leave_application", { state });
+      const resp = await httpClient.post("//localhost:5000/leave_application", { myObj });
       console.log("Response:", resp);
+      alert("Leave Successfully Applied");
     } catch (error) {
-      if (error.response.status === 400) {
-        alert("Leave Application Unsuccessful");
-      }
+      alert("Leave Application Unsuccessful");
     }
   }
 
   return (
     <div className="formWrapper">
-      <div className="leaveform cardbody-color" style={{border: "2px solid black"}}>
+      <div className="leaveform cardbody-color">
         <h1>Leave Form</h1>
         <form>
           <div className="form-row">

@@ -18,39 +18,46 @@ function App() {
     email: "",
     firstName: "",
     lastName: "",
-    imageUrl: ""
+    imageURL: "",
+    level: "",
   });
   useEffect(() => {
     (async () => {
       try {
         const resp = await httpClient.get("//localhost:5000/@me");
         const data = resp.data;
-        setUser(prevUser=> ({ ...prevUser, email: data['email'] }));
-        setUser(prevUser=> ({ ...prevUser, firstName: data['givenName'] }));
-        setUser(prevUser=> ({ ...prevUser, lastName: data['familyName'] }));
-        setUser(prevUser=> ({ ...prevUser, imageUrl: data['imageUrl'] }));
-        console.log("USER", user);
+        setUser(prevUser => ({ ...prevUser, imageURL: data['imageURL'] }));
+        setUser(prevUser => ({ ...prevUser, level: data['level'] }));
+        setUser(prevUser => ({ ...prevUser, firstName: data['name'] }));
+        setUser(prevUser => ({ ...prevUser, email: data['email'] }));
+        // console.log("USER ", user);
       } catch (error) {
-        console.log("Not authenticated"); 
+        console.log("Not authenticated");
       }
     })();
   }, []);
 
   return (
     <div className="App">
-      <Navbar user = {user} />
+      <Navbar user={user} />
       <BrowserRouter>
-      <Routes>
-        <Route path="/" exact element={<Intro />} />
-        <Route path="/login" exact element={<LoginForm />} />
-        <Route path="/dashboard" exact element={<Dashboard />} />
-        <Route path="/otpVerification" exact element={<OtpVerification />} />
-        <Route path="/leaveForm" exact element={<LeaveForm />} />
-        <Route path="/displayLeaves" exact element={<DisplayLeaves />} />
-        <Route path="/checkLeaves" exact element={<CheckLeaves />} />
-        {/* <Route component={NotFound} /> */}
-      </Routes>
-    </BrowserRouter>
+        <Routes>
+          <Route path="/" exact element={<Intro />} />
+          <Route path="/login" exact element={<LoginForm />} />
+          <Route path="/otpVerification" exact element={<OtpVerification />} />
+
+          {(user.email == "" || user.email == undefined) ? ('') : (
+            <>
+              <Route path="/dashboard" exact element={<Dashboard  user = {user} />} />
+              <Route path="/leaveForm" exact element={<LeaveForm user={user} />} />
+              <Route path="/displayLeaves" exact element={<DisplayLeaves />} />
+              <Route path="/checkLeaves" exact element={<CheckLeaves user = {user} />} />
+            </>
+          )}
+
+          {/* <Route component={NotFound} /> */}
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,
+                    initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="test.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-center row">
+            <div class="col-md-10">
+                <div class="rounded">
+                    <div class="table-responsive table-borderless">
+                        <table class="table" id="tableID">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">S. No.</th>
+                                    <th>Order #</th>
+                                    <th>Company name</th>
+                                    <th>status</th>
+                                    <th>Total</th>
+                                    <th>Created</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-body">
+                                <tr class="cell-1" data-toggle="modal" data-target="#exampleModal">
+                                    <td class="text-center">1</td>
+                                    <td>#SO-13487</td>
+                                    <td>Gasper Antunes</td>
+                                    <td><span class="badge badge-danger">Fullfilled</span></td>
+                                    <td>$2674.00</td>
+                                    <td>Today</td>
+                                    <td class="table-elipse" data-toggle="collapse" data-target="#demo"><i
+                                            class="fa fa-ellipsis-h text-black-50"></i></td>
+                                </tr>
+                                <tr class="cell-1" data-toggle="collapse" data-target="#demo-2">
+                                    <td class="text-center">2</td>
+                                    <td>#SO-13488</td>
+                                    <td>Tinder Steel</td>
+                                    <td><span class="badge badge-success">Fullfilled</span></td>
+                                    <td>$3664.00</td>
+                                    <td>Yesterday</td>
+                                    <td class="table-elipse" data-toggle="collapse" data-target="#demo"><i
+                                            class="fa fa-ellipsis-h text-black-50"></i></td>
+                                </tr>
+                                <tr class="cell-1" data-toggle="collapse" data-target="#demo-3">
+                                    <td class="text-center">3</td>
+                                    <td>#SO-13489</td>
+                                    <td>Micro Steel</td>
+                                    <td><span class="badge badge-success">Placed</span></td>
+                                    <td>$2674.00</td>
+                                    <td>March 20, 2020</td>
+                                    <td class="table-elipse" data-toggle="collapse" data-target="#demo"><i
+                                            class="fa fa-ellipsis-h text-black-50"></i></td>
+                                </tr>
+                                <tr class="cell-1" data-toggle="collapse" data-target="#demo-4">
+                                    <td class="text-center">4</td>
+                                    <td>#SO-13490</td>
+                                    <td>B Mobiles</td>
+                                    <td><span class="badge badge-success">Delivered</span></td>
+                                    <td>$4674.00</td>
+                                    <td>March 22, 2020</td>
+                                    <td class="table-elipse" data-toggle="collapse" data-target="#demo"><i
+                                            class="fa fa-ellipsis-h text-black-50"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="fancyTable.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#tableID").fancyTable({
+                sortColumn: 0,
+                /* Setting pagination or enabling */
+                pagination: true,
+                perpage: 10,
+                globalSearch: true,
+                /* Exclude 2nd column from global search.*/
+                globalSearchExcludeColumns: [2],
+                onInit: function () {
+                    /* On initialization of table */
+                    console.log({ element: this });
+                },
+                onUpdate: function () {
+                    /* On update like search and sort of table */
+                    console.log({ element: this });
+                }
+            });
+        });            
+    </script>
+</body>
+
+</html>

@@ -63,15 +63,16 @@ def get_user_data(email_id):
 def insert_leave(l):
     connect = db.connect()
     cursor = connect.cursor()
-    cursor.execute("SELECT user_id, department FROM user WHERE email_id = %s",(l['email']))
+    cursor.execute("SELECT user_id, department, position FROM user WHERE email_id = %s",(l['email']))
     data = cursor.fetchall()
     user_id = data[0][0]
     department = data[0][1]
+    position = data[0][2]
 
     cursor.execute("INSERT INTO leaves\
         (department, user_id, nature, purpose, is_station, request_date, start_date, end_date, duration, status, level) \
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        (department, user_id, l['nature'], l['purpose'], l['isStation'], l['rdate'], l['sdate'], l['edate'], l['duration'], 'Pending', 'Faculty'))
+        (department, user_id, l['nature'], l['purpose'], l['isStation'], l['rdate'], l['sdate'], l['edate'], l['duration'], 'Pending', position))
     connect.commit()
     return 1
 
@@ -111,6 +112,8 @@ def login_otp():
     email = request.json['email']
     if is_valid_email(email):
         send_otp(email)
+        session['user_info'] = dict()
+        session['user_info']['email'] = email
         return success_code
     else:
         return failiure_code
@@ -120,21 +123,40 @@ def validate_otp():
     otp = request.json['otp']
     print(otp , OriginalOTP,'==================')
     if str(otp) == str(OriginalOTP):
+        
+        session['logged_in'] = True
+        session['user_info']['imageUrl'] = ""
+
         return success_code
     else:
+        session.clear()
         return failiure_code
 
 @app.route('/@me')
 def get_current_user():
     if 'user_info' in session:
-        print("HHHH", session['user_info'])
-        return jsonify(session['user_info'])
+        email = session['user_info']['email']
+        user_data = get_user_data(email)
+        user_data = user_data[0]
+
+        data = dict()
+        data['name'] = user_data[1]
+        data['email'] = user_data[2]
+        data['level'] = user_data[3]
+        data['department'] = user_data[4]
+        data['total_leaves'] = user_data[5]
+        data['av_leaves'] = user_data[6]
+        data['imageURL'] = session['user_info']['imageUrl']
+        print("HHHHHHHHHHHHHHHHHHH", data)
+
+        return jsonify(data)
     else:
         return jsonify("")
 
 @app.route('/leave_application', methods=['POST'])
 def leave_application():
-    leave = request.json['state']
+    leave = request.json['myObj']
+    print("HHHHHHHHHHH", leave)
     status = insert_leave(leave)
     if status:
         return success_code
@@ -162,7 +184,9 @@ def dashboard():
 
 @app.route('/fetchLeaves', methods = ['POST'])
 def fetchLeaves():
-    user_id = request.json['user_id']
+    email = session['user_info']['email']
+    data = get_user_data(email)[0]
+    user_id = data[0]
     connect = db.connect()
     cursor = connect.cursor()
     cursor.execute("SELECT * FROM leaves WHERE user_id = %s",(user_id))
@@ -180,13 +204,12 @@ def check_leaves():
     email = session['user_info']['email']
     data = get_user_data(email)[0]
     user_id = data[0]
-    user_id = request.json['user_id']
     connect = db.connect()
     cursor = connect.cursor()
     cursor.execute('SELECT department FROM user WHERE user_id = %s',(user_id))
     department = cursor.fetchall()[0][0]
     cursor.execute('SELECT * FROM leaves WHERE\
-         department = %s and status = %s and level = %s',(department,"pending", "Faculty"))
+         department = %s and level = %s',(department, "Faculty"))
     leaves = cursor.fetchall()
     payload = []
     for i in leaves:
@@ -207,6 +230,26 @@ def approve_leave():
     connect = db.connect()
     cursor = connect.cursor()
     cursor.execute("UPDATE leaves SET status = 'Approved By Hod' WHERE leave_id = %s",(leave_id))
+    connect.commit()
+    return success_code
+
+@app.route('/disapprove_leave', methods = ['POST'])
+def disapprove_leave():
+    leave_id = request.json['leave_id']
+    connect = db.connect()
+    cursor = connect.cursor()
+    cursor.execute("UPDATE leaves SET status = 'Disapproved By Hod' WHERE leave_id = %s",(leave_id))
+    connect.commit()
+    return success_code
+
+@app.route('/add_comment', methods = ['POST'])
+def add_comment():
+    leave_id = request.json['leave_id']
+    comment = request.json['comment']
+    connect = db.connect()
+    cursor = connect.cursor()
+    print("HHHHHHHHHH", leave_id, comment)
+    cursor.execute("UPDATE leaves SET authority_comment = %s WHERE leave_id = %s",(comment, leave_id))
     connect.commit()
     return success_code
     
