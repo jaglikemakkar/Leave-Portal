@@ -5,9 +5,9 @@ import httpClient from "../httpClient";
 import '../css/CheckLeaves.css';
 import { Button, Dropdown } from 'react-bootstrap';
 import Table from './Table.js';
-export default function CheckLeaves( {user} ) {
+export default function CheckLeaves({ user }) {
 
-  if (user.level == "faculty"){
+  if (user.level == "faculty") {
     window.location.href = '/Dashboard';
   }
 
@@ -53,14 +53,14 @@ export default function CheckLeaves( {user} ) {
       console.log("Leave Id: ", leave_id);
       console.log("Leaves", leaves);
       let temp = leaves;
-      for (let i=0; i<temp.length; i++){
-        if (temp[i].id == leave_id){
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i].id == leave_id) {
           temp[i].status = "Approved by Hod";
         }
       }
       setLeaves(temp);
       console.log(leaves);
-      
+
       const resp = await httpClient.post("//localhost:5000/approve_leave", { leave_id });
       window.location.reload();
     } catch (error) {
@@ -73,14 +73,14 @@ export default function CheckLeaves( {user} ) {
       console.log("Leave Id: ", leave_id);
       console.log("Leaves", leaves);
       let temp = leaves;
-      for (let i=0; i<temp.length; i++){
-        if (temp[i].id == leave_id){
+      for (let i = 0; i < temp.length; i++) {
+        if (temp[i].id == leave_id) {
           temp[i].status = "Disapproved by Hod";
         }
       }
       setLeaves(temp);
       console.log(leaves);
-      
+
       const resp = await httpClient.post("//localhost:5000/disapprove_leave", { leave_id });
       window.location.reload();
     } catch (error) {
@@ -88,14 +88,14 @@ export default function CheckLeaves( {user} ) {
     }
   }
 
-  const addComment = async(leave_id) => {
-    try{
-    const uid = "comment-" + leave_id;
-    const comment = document.getElementById(uid).value;
-    console.log("Comment:",  comment);
-    const resp = await httpClient.post("//localhost:5000/add_comment", { comment, leave_id });
-    window.location.reload();
-    } catch(error){
+  const addComment = async (leave_id) => {
+    try {
+      const uid = "comment-" + leave_id;
+      const comment = document.getElementById(uid).value;
+      console.log("Comment:", comment);
+      const resp = await httpClient.post("//localhost:5000/add_comment", { comment, leave_id });
+      window.location.reload();
+    } catch (error) {
       alert("Some error occurred");
     }
   }
@@ -128,26 +128,66 @@ export default function CheckLeaves( {user} ) {
                 </button>
               </div>
               <div className="modal-body">
-                <p><b>Leave Id: </b>{leave.id}</p>
-                <p><b>Nature of leave: </b> {leave.nature}</p>
-                <p><b>Start Date of leave: </b> {leave.start_date.slice(0, -12)}</p>
-                <p><b>End Date of leave: </b> {leave.end_date.slice(0, -12)}</p>
-                <p><b>Duration of leave: </b> {leave.duration}</p>
-                <p><b>Request Date of leave: </b> {leave.request_date.slice(0, -12)}</p>
-                <p><b>Purpose of leave: </b> {leave.purpose}</p>
-                <p><b>Status: </b> {leave.status}</p>
-                <p><b>Authority Comment: </b> {leave.authority_comment}</p>
-                <textarea id = {"comment-"+leave.id} placeholder = "Add Comment" style={{"width": "250px"}}></textarea>
+                <table className='table table-condensed'>
+                  <tbody>
+                    <tr>
+                      <td><b>Leave Id:</b></td>
+                      <td>{leave.id}</td>
+                    </tr>
+                    <tr>
+                      <td><b>Nature of leave: </b></td>
+                      <td>{leave.nature}</td>
+
+                    </tr>
+                    <tr>
+                      <td><b>Start Date of leave: </b></td>
+                      <td>{leave.start_date.slice(0, -12)}</td>
+                    </tr>
+                    <tr>
+                      <td><b>Duration of leave: </b></td>
+                      <td>{leave.duration}</td>
+                    </tr>
+                    <tr>
+                      <td><b>Total Leaves of Faculty</b></td>
+                      <td>10</td>
+                    </tr>
+                    <tr>
+                      <td><b>Balance as on Date</b></td>
+                      <td>5</td>
+                    </tr>
+                    <tr>
+                      <td><b>End Date of leave: </b></td>
+                      <td>{leave.end_date.slice(0, -12)}</td>
+                    </tr>
+                    <tr>
+                      <td><b>Request Date of leave: </b></td>
+                      <td>{leave.request_date.slice(0, -12)}</td>
+                    </tr>
+                    <tr>
+                      <td><b>Purpose of leave: </b></td>
+                      <td>{leave.purpose}</td>
+                    </tr>
+                    <tr>
+                      <td><b>Status: </b> </td>
+                      <td>{leave.status}</td>
+                    </tr>
+                    <tr>
+                      <td><b>Authority Comment: </b></td>
+                      <td>{leave.authority_comment}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                {/* <textarea id={"comment-" + leave.id} placeholder="Add Comment" style={{ "width": "250px" }}></textarea> */}
               </div>
               <div className="modal-footer">
                 {(leave.status == "Pending") ? (
                   <>
-                  <button type="button" className="btn btn-outline-success" onClick={() => {approveLeave(leave.id)}}>Approve</button>
-                  <button type="button" className="btn btn-outline-danger" onClick={() => {disapproveLeave(leave.id)}}>Disapprove</button>
+                    <button type="button" className="btn btn-outline-success" onClick={() => { approveLeave(leave.id) }}>Approve</button>
+                    <button type="button" className="btn btn-outline-danger" onClick={() => { disapproveLeave(leave.id) }}>Disapprove</button>
                   </>
                 ) : (leave.status)
                 }
-                <button type="button" className="btn btn-outline-primary" onClick={() => {addComment(leave.id)}}>Add Comment</button>
+                <button type="button" className="btn btn-outline-primary" onClick={() => { addComment(leave.id) }}>Add Comment</button>
                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
             </div>

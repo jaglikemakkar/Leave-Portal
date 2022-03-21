@@ -1,3 +1,5 @@
+// import ReactTable from "react-table";  
+// import "react-table/react-table.css";  
 import { Button, Dropdown } from 'react-bootstrap';
 import React from 'react'
 import { useState, useEffect } from 'react'
@@ -15,8 +17,23 @@ export default function DisplayLeaves() {
   const fetchLeaves = async (e) => {
     try {
       const resp = await httpClient.post("//localhost:5000/fetchLeaves");
-      setLeaves(resp["data"]['result'])
-      setShowLeaves(resp["data"]['result'])
+      const obj = [{
+        id: 1,
+        nature: "CL",
+        start_date: "12 jan",
+        end_date: "13 Jan",
+        duration: "12",
+        request_date: "12",
+        purpose: "haoliday",
+        status: "1"
+      }]
+      setShowLeaves(obj)
+      setShowLeaves(obj)
+      console.log("fsdfffffffffffff")
+      return obj;
+      // setLeaves(resp["data"]['result'])
+      // setShowLeaves(resp["data"]['result'])
+
       return resp["data"]["result"]
       //   window.location.href = '/otpVerification';
     } catch (error) {
@@ -52,30 +69,6 @@ export default function DisplayLeaves() {
       ) : (
         <p>loading...</p>
       )}
-
-      {/* <div className='leaves_container'>
-        <table className="table" id="tableID">
-          <thead>
-            <tr>
-              <th>Leave Id</th>
-              <th>Nature</th>
-              <th>Request Date</th>
-              <th>Duration</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody className="table-body">
-            {showLeaves.map((leave) => (
-              <tr className="cell-1" data-toggle="modal" data-target={"#modal-" + leave.id}>
-                <td>{leave.id}</td>
-                <td>{leave.nature}</td>
-                <td>{leave.request_date}</td>
-                <td>{leave.duration}</td>
-                <td>{leave.status}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table> */}
       {showLeaves.map((leave) => (
         <div className="modal fade" id={"modal-" + leave.id} tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel"
           aria-hidden="true">
@@ -87,8 +80,8 @@ export default function DisplayLeaves() {
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div className="modal-body">
-                <table className='table'>
+              <div className="modaldata">
+                <table className='tabledata'>
                   <tr>
                     <td><b>Leave Id:</b></td>
                     <td>{leave.id}</td>
@@ -127,6 +120,12 @@ export default function DisplayLeaves() {
                     <td>{leave.authority_comment}</td>
                   </tr>
                 </table>
+                {/*                  
+                  <p><b>Status: </b> {leave.status}</p>
+                  <hr />
+                  <p><b>Authority Comment: </b> {leave.authority_comment}</p>
+                  <hr /> */}
+
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>

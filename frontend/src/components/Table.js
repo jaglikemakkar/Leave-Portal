@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import '../css/Table.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
+
 
 class Table extends Component {
 
@@ -100,10 +103,13 @@ class Table extends Component {
       return null;
     }
     return (
-      <tr onChange={this._search}>
+      <tr class="search-row" onChange={this._search}>
         {this.props.headers.map(function (_ignore, idx) {
           return <td key={idx}>
-            <input type="text" data-idx={idx} />
+            <div class="search-div" >
+              <input type="text" data-idx={idx}></input>
+              <i><FontAwesomeIcon icon={faSearch} /></i>
+            </div>
           </td>
         })}
       </tr>
@@ -118,49 +124,49 @@ class Table extends Component {
 
   _renderTable() {
     return (
-        <div className="container">
-      <table className="table">
-        <thead>
-          <tr>
-            {this.state.headers.map((v, i) => {
-              if (this.state.sortby === i) {
-                v += this.state.descending ? ' \u2191' : ' \u2193'
+      <div className="container">
+        <table className="table">
+          <thead>
+            <tr>
+              {this.state.headers.map((v, i) => {
+                if (this.state.sortby === i) {
+                  v += this.state.descending ? ' \u2191' : ' \u2193'
+                }
+                return (
+                  <th key={i} onClick={this._sort}>
+                    {v}
+                  </th>
+                )
+              }, this)
               }
+            </tr>
+          </thead>
+          <tbody className="table-body" onDoubleClick={this._showEditor}>
+            {this._renderSearch()}
+            {this.state.initialData.map((row, rowidx) => {
               return (
-                <th key={i} onClick={this._sort}>
-                  {v}
-                </th>
+                <tr key={rowidx} className="cell-1" data-toggle="modal" data-target={"#modal-" + row[0]}>
+                  {row.map((cell, idx) => {
+                    var content = cell;
+                    var edit = this.state.edit;
+                    if (edit && edit.row === rowidx && edit.cell === idx) {
+                      content = (
+                        <form onSubmit={this._save}>
+                          <input type="text" defaultValue={cell} />
+                        </form>
+                      )
+                    }
+                    return (
+                      <td key={idx} data-row={rowidx}>{content}</td>
+                    )
+                  }, this)
+                  }
+                </tr>
               )
             }, this)
             }
-          </tr>
-        </thead>
-        <tbody className="table-body" onDoubleClick={this._showEditor}>
-          {this._renderSearch()}
-          {this.state.initialData.map((row, rowidx) => {
-            return (
-              <tr key={rowidx} className="cell-1" data-toggle="modal" data-target={"#modal-" + row[0]}>
-                {row.map((cell, idx) => {
-                  var content = cell;
-                  var edit = this.state.edit;
-                  if (edit && edit.row === rowidx && edit.cell === idx) {
-                    content = (
-                      <form onSubmit={this._save}>
-                        <input type="text" defaultValue={cell} />
-                      </form>
-                    )
-                  }
-                  return (
-                    <td key={idx} data-row={rowidx}>{content}</td>
-                  )
-                }, this)
-                }
-              </tr>
-            )
-          }, this)
-          }
-        </tbody>
-      </table >
+          </tbody>
+        </table >
       </div>
     )
   }

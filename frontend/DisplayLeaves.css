@@ -35,20 +35,19 @@ thead {
     color: #fff
 }
 
+
 .modaldata {
     width: fit-content;
 }
 
+
 tr {
     border-top: 0.5px solid grey;
+
 }
 
 td {
     text-align: center;
     border-right: solid 1px rgb(146, 146, 146);
     border-left: solid 1px grey;
-}
-
-.table-condensed>tbody>tr>td, .table-condensed>tfoot>tr>td{
-    padding: 5px;
 }
