@@ -1,3 +1,4 @@
+from tkinter import E
 from flask import Flask, jsonify, render_template, url_for, request, session, redirect, Response
 from flask_pymongo import PyMongo
 from matplotlib.pyplot import connect
@@ -7,7 +8,9 @@ from authlib.integrations.flask_client import OAuth
 from flask_cors import CORS, cross_origin
 import bcrypt
 import random
-import smtplib
+import smtplib, os
+import pandas as pd
+from pymysql import NULL
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -45,7 +48,7 @@ failiure_code = Response(status=400)
 def is_valid_email(email_id):
     connect = db.connect()
     cursor = connect.cursor()
-    cursor.execute("SELECT * FROM user_auth WHERE email_id = %s",(email_id))
+    cursor.execute("SELECT * FROM user WHERE email_id = %s",(email_id))
     data = cursor.fetchall()
     if not data:
         session.clear()
@@ -68,14 +71,151 @@ def insert_leave(l):
     user_id = data[0][0]
     department = data[0][1]
     position = data[0][2]
-
+    
+    
     cursor.execute("INSERT INTO leaves\
-        (department, user_id, nature, purpose, is_station, request_date, start_date, end_date, duration, status, level) \
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        (department, user_id, l['nature'], l['purpose'], l['isStation'], l['rdate'], l['sdate'], l['edate'], l['duration'], 'Pending', position))
+        (department, user_id, nature, purpose, is_station, request_date, start_date, end_date, duration, status, level,file_uploaded) \
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)",
+        (department, user_id, l['nature'], l['purpose'], l['isStation'], l['rdate'], l['sdate'], l['edate'], l['duration'], 'Pending', position,l['docc']))
     connect.commit()
     return 1
 
+def initialize():
+    connect = db.connect()
+    cursor = connect.cursor()
+    cursor.execute("drop table if exists leaves")
+    cursor.execute("drop table if exists user")
+    connect.commit()
+    cursor.execute("CREATE TABLE user(      \
+        user_id INT PRIMARY KEY AUTO_INCREMENT, \
+        name VARCHAR(30),                       \
+        email_id VARCHAR(50) UNIQUE,            \
+        position VARCHAR(30),                   \
+        department VARCHAR(10),                 \
+        total_casual_leaves INTEGER,            \
+        taken_casual_leaves INTEGER,            \
+        total_restricted_leaves INTEGER,        \
+        taken_restricted_leaves INTEGER,        \
+        total_earned_leaves INTEGER,            \
+        taken_earned_leaves INTEGER,            \
+        total_vacation_leaves INTEGER,          \
+        taken_vacation_leaves INTEGER,          \
+        total_special_leaves INTEGER,           \
+        taken_special_leaves INTEGER,           \
+        total_commuted_leaves INTEGER,          \
+        taken_commuted_leaves INTEGER,          \
+        total_hospital_leaves INTEGER,          \
+        taken_hospital_leaves INTEGER,          \
+        total_study_leaves INTEGER,             \
+        taken_study_leaves INTEGER,             \
+        total_childcare_leaves INTEGER,         \
+        taken_childcare_leaves INTEGER          \
+    );")
+
+    cursor.execute("CREATE TABLE leaves(        \
+        leave_id INT PRIMARY KEY AUTO_INCREMENT,    \
+        department VARCHAR(10),                     \
+        user_id INT,                                \
+        nature VARCHAR(100),                        \
+        purpose VARCHAR(200),                       \
+        is_station VARCHAR(10),                     \
+        request_date TIMESTAMP,                     \
+        start_date TIMESTAMP,                       \
+        end_date TIMESTAMP,                         \
+        authority_comment VARCHAR(200),             \
+        duration INT,                               \
+        status VARCHAR(30),                         \
+        level VARCHAR(30),                          \
+        file_uploaded VARCHAR(100),                 \
+        FOREIGN KEY (user_id) REFERENCES user(user_id)\
+    );")
+    connect.commit()
+
+
+def get_user_dic(email):
+    data = get_user_data(email)[0]
+    dic = {}
+    dic['user_id'] = data[0]
+    dic['name'] = data[1]
+    dic['email'] = data[2]
+    dic['position'] = data[3]
+    dic['department'] = data[4]
+    dic['total_casual_leaves'] = data[5]
+    dic['taken_casual_leaves'] = data[6]
+    dic['total_restricted_leaves'] = data[7]
+    dic['taken_restricted_leaves'] = data[8]
+    dic['total_earned_leaves'] = data[9]
+    dic['taken_earned_leaves'] = data[10]
+    dic['total_vacation_leaves'] = data[11]
+    dic['taken_vacation_leaves'] = data[12]
+    dic['total_special_leaves'] = data[13]
+    dic['taken_special_leaves'] = data[14]
+    dic['total_commuted_leaves'] = data[15]
+    dic['taken_commuted_leaves'] = data[16]
+    dic['total_hospital_leaves'] = data[17]
+    dic['taken_hospital_leaves'] = data[18]
+    dic['total_study_leaves'] = data[19]
+    dic['taken_study_leaves'] = data[20]
+    dic['total_childcare_leaves'] = data[21]
+    dic['taken_childcare_leaves'] = data[22]
+
+    return dic
+
+def send_update_mail(leave_id):
+
+    connect = db.connect()
+    cursor = connect.cursor()
+    cursor.execute('SELECT duration,request_date,start_date,end_date,status,authority_comment,user_id,nature FROM leaves WHERE leave_id = %s',(leave_id))
+    tmp = cursor.fetchall()[0]
+    duration = tmp[0]
+    request_date = tmp[1]
+    start_date = tmp[2]
+    end_date = tmp[3]
+    status = tmp[4]
+    authority_comment = tmp[5]    
+    user_id = tmp[6]
+    nature = tmp[7]
+
+    cursor.execute('SELECT total_casual_leaves,taken_casual_leaves,email_id,name FROM user WHERE user_id = %s',(user_id))
+    tmp = cursor.fetchall()[0]
+    total_leaves = tmp[0]
+    taken_leaves = tmp[1]
+    email_id = tmp[2]
+    name = tmp[3]
+    remaining_leaves = str(float(total_leaves) - float(taken_leaves))
+    msg = """Hi {}, your leave application for {} has been {}.\n\n\
+    Leave Information: \n\
+        Leave Id - {} \n\
+        Duration - {} days \n\
+        Request Date - {} \n\
+        Start Date - {} \n\
+        End Date - {} \n\
+        Status - {} \n\
+        Authority Comment - {} \n\n\
+    Updated Leaves Count: \n\
+        Total Casual Leaves - {} days \n\
+        Taken Casual Leaves - {} days \n\
+        Remaining Casual Leaves - {} days \n\
+    """.format(name,nature,status,leave_id,duration,request_date,start_date,end_date,status,authority_comment,total_leaves,taken_leaves,remaining_leaves)
+
+    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s.starttls()
+    s.login("sangramjagadale2017@gmail.com", "ifitfwphppuwtgfl")
+    s.sendmail('IIT Rpr Leave OTP',email_id,msg)
+
+def findNextLeaveID():
+    connect = db.connect()
+    cursor = connect.cursor()
+    cursor.execute("select max(leave_id) from leaves;")
+    data = cursor.fetchall()
+    if not data:
+        return 1    
+    if not data[0]:
+        return 1
+    try:
+        return data[0][0]+1
+    except:
+        return 1
 
 @app.route('/')
 def home():
@@ -90,7 +230,6 @@ def login_oauth():
         session['user_info'] = user_info
         session.permanent = True
         data = get_user_data(email)
-        print("======", session)
         return jsonify(data)
     else:
         return failiure_code
@@ -147,7 +286,6 @@ def get_current_user():
         data['total_leaves'] = user_data[5]
         data['av_leaves'] = user_data[6]
         data['imageURL'] = session['user_info']['imageUrl']
-        print("HHHHHHHHHHHHHHHHHHH", data)
 
         return jsonify(data)
     else:
@@ -155,9 +293,17 @@ def get_current_user():
 
 @app.route('/leave_application', methods=['POST'])
 def leave_application():
-    leave = request.json['myObj']
-    print("HHHHHHHHHHH", leave)
-    status = insert_leave(leave)
+    print("tem1p",request.files.keys())
+    print("tem2p",request.form.keys())
+    dataa = request.form.copy()
+    if 'docc' in request.files:
+        dataa['docc'] = request.files['docc']
+        ff = dataa['docc']
+        ff.save(os.getcwd()+'/files/doc'+ str(findNextLeaveID()) + '.pdf')
+        dataa['docc'] = os.getcwd()+'./files/doc'+ str(findNextLeaveID()) + '.pdf'
+    else:
+        dataa['docc'] = ""
+    status = insert_leave(dataa)
     if status:
         return success_code
     else:
@@ -165,21 +311,9 @@ def leave_application():
         
 @app.route('/dashboard',methods = ["POST","GET"])
 def dashboard():
-    print('================' , session)
-    email = session['user_info']['email']
-    user_data = get_user_data(email)
-    user_data = user_data[0]
-    print(user_data)
-
-    data = dict()
-    data['name'] = user_data[1]
-    data['email'] = user_data[2]
-    data['level'] = user_data[3]
-    data['department'] = user_data[4]
-    data['total_leaves'] = user_data[5]
-    data['av_leaves'] = user_data[6]
-    data['imageURL'] = session['user_info']['imageUrl']
-
+    print('Dashboard' , session)
+    data = get_user_dic(session['user_info']['email'])
+    print("HHHHH", data)
     return jsonify(data)
 
 @app.route('/fetchLeaves', methods = ['POST'])
@@ -194,7 +328,7 @@ def fetchLeaves():
     payload = []
     for i in data:
         # department, user_id, nature, purpose, is_station, request_date, start_date, end_date, duration, status, level
-        content = {'id': i[0], 'department': i[1], 'user_id': i[2],'nature': i[3],'purpose': i[4],'is_station': i[5],'request_date': i[6],'start_date': i[7],'end_date': i[8], 'authority_comment': i[9], 'duration': i[10],'status': i[11],'level': i[12]}
+        content = {'id': i[0], 'department': i[1], 'user_id': i[2],'nature': i[3],'purpose': i[4],'is_station': i[5],'request_date': i[6],'start_date': i[7],'end_date': i[8], 'authority_comment': i[9], 'duration': i[10],'status': i[11],'level': i[12],  'file_uploaded':i[13]}
         payload.append(content)
         
     return jsonify(result=payload)
@@ -202,16 +336,20 @@ def fetchLeaves():
 @app.route('/check_leaves',methods = ['GET','POST'])
 def check_leaves():
     email = session['user_info']['email']
-    data = get_user_data(email)[0]
-    user_id = data[0]
+    data = get_user_dic(email)
+    user_id = data['user_id']
+    department = data['department']
+    position = data['position']
     connect = db.connect()
     cursor = connect.cursor()
-    cursor.execute('SELECT department FROM user WHERE user_id = %s',(user_id))
-    department = cursor.fetchall()[0][0]
-    cursor.execute('SELECT * FROM leaves WHERE\
-         department = %s and level = %s',(department, "Faculty"))
+    if position == "hod":
+        cursor.execute('SELECT * FROM leaves WHERE\
+            department = %s and level = %s',(department, "Faculty"))
+    elif position == 'dean':
+        cursor.execute('SELECT * FROM leaves')
     leaves = cursor.fetchall()
     payload = []
+
     for i in leaves:
         content = {'id': i[0], 'department': i[1], 'user_id': i[2],'nature': i[3],'purpose': i[4],'is_station': i[5],'request_date': i[6],'start_date': i[7],'end_date': i[8], 'authority_comment': i[9], 'duration': i[10],'status': i[11],'level': i[12]}
         user_id = i[2]
@@ -220,17 +358,69 @@ def check_leaves():
         cursor.execute('SELECT email_id FROM user WHERE user_id = %s',(user_id))
         data = cursor.fetchall()
         email = data[0][0]
-        content['email'] = email
-        payload.append(content)
+        cur_user = get_user_dic(email)
+        content['email'] = cur_user['email']
+        content['name'] = cur_user['name']
+        nature = i[3]
+        c_st1 = "Total " + nature + 's'
+        c_st2 = "Taken " + nature + 's'
+        nature = nature.lower().split()
+        nature = '_'.join(nature)
+        u_st1 = 'total_' + nature + 's'
+        u_st2 = 'taken_' + nature + 's'
+        
+        content[c_st1] = cur_user[u_st1]
+        content[c_st2] = cur_user[u_st2]
+        content["key1"] = c_st1
+        content["key2"] = c_st2
+        if position == 'dean':
+            if nature == "casual_leave" or nature == "restricted_leave":
+                continue
+            if content['status'] == 'Approved By Hod' or content['status'] == 'Approved By Dean' or content['status'] == 'Disapproved By Dean':
+                payload.append(content)
+        elif position == 'hod':
+            payload.append(content)
+
     return jsonify(result = payload)
 
 @app.route('/approve_leave', methods = ['POST'])
 def approve_leave():
     leave_id = request.json['leave_id']
+    user = get_user_dic(session['user_info']['email'])
+
     connect = db.connect()
     cursor = connect.cursor()
-    cursor.execute("UPDATE leaves SET status = 'Approved By Hod' WHERE leave_id = %s",(leave_id))
+    if user["position"] == "hod":
+        cursor.execute("UPDATE leaves SET status = 'Approved By Hod' WHERE leave_id = %s",(leave_id))
+    elif user["position"] == "dean":
+        cursor.execute("UPDATE leaves SET status = 'Approved By Dean' WHERE leave_id = %s",(leave_id))
     connect.commit()
+
+    cursor.execute("Select user_id, nature, duration from leaves where leave_id = %s", (leave_id))
+    data = cursor.fetchall()[0]
+    user_id = data[0]
+    nature = data[1]
+    duration = float(data[2])
+
+    nature = nature.lower().split()
+    nature = '_'.join(nature)
+    u_st1 = 'total_' + nature + 's'
+    u_st2 = 'taken_' + nature + 's'
+    query = "Select %s from user where user_id = %s" % (u_st2, user_id)
+    cursor.execute(query)
+    data = cursor.fetchall()[0]
+    taken_cnt = float(data[0]) + duration
+    print("HHHHHHHHH")
+    if (nature == "Casual Leave" or nature == "Restricted Leave") and user['position']=='hod':
+        print("YYYYYYYYY")
+        query = "Update user set %s = %s where user_id = %s" % (u_st2, taken_cnt, user_id)
+        cursor.execute(query)
+    elif nature != "Casual Leave" and nature != "Restricted Leave" and user['position']=='dean':
+        print('ZZZZZZZZZZ')
+        query = "Update user set %s = %s where user_id = %s" % (u_st2, taken_cnt, user_id)
+        cursor.execute(query)
+    connect.commit()
+    send_update_mail(leave_id)
     return success_code
 
 @app.route('/disapprove_leave', methods = ['POST'])
@@ -248,9 +438,24 @@ def add_comment():
     comment = request.json['comment']
     connect = db.connect()
     cursor = connect.cursor()
-    print("HHHHHHHHHH", leave_id, comment)
     cursor.execute("UPDATE leaves SET authority_comment = %s WHERE leave_id = %s",(comment, leave_id))
     connect.commit()
+    return success_code
+
+@app.route('/add_users', methods=['GET', 'POST'])
+def add_users():
+    file = request.files['file']
+    file.save("data.xlsx")
+    dfs = pd.read_excel("data.xlsx", sheet_name=None)
+    d = dfs["Sheet1"]
+    initialize()
+    for i in range (len(d)):
+        query = "insert into user(name, email_id, position, department, total_casual_leaves, taken_casual_leaves, total_restricted_leaves, taken_restricted_leaves, total_earned_leaves, taken_earned_leaves, total_vacation_leaves, taken_vacation_leaves, total_special_leaves, taken_special_leaves, total_commuted_leaves, taken_commuted_leaves, total_hospital_leaves, taken_hospital_leaves, total_study_leaves, taken_study_leaves, total_childcare_leaves, taken_childcare_leaves) values ('%s', '%s', '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);" % (d.iloc[i,0], d.iloc[i,1], d.iloc[i,2], d.iloc[i,3], d.iloc[i,4], d.iloc[i,5], d.iloc[i,6], d.iloc[i,7], d.iloc[i,8], d.iloc[i,9], d.iloc[i,10], d.iloc[i,11], d.iloc[i,12], d.iloc[i,13], d.iloc[i,14], d.iloc[i,15], d.iloc[i,16], d.iloc[i,17], d.iloc[i,18], d.iloc[i,19], d.iloc[i,20], d.iloc[i,21])
+        connect = db.connect()
+        cursor = connect.cursor()
+        cursor.execute(query)
+        connect.commit()
+
     return success_code
     
 # @app.route('/register', methods=['POST', 'GET'])

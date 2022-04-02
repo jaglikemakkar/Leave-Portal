@@ -8,128 +8,91 @@ import '../css/Dashboard.css';
 // import Container from 'react-bootstrap/Container';
 // import 'bootstrap/dist/css/bootstrap.min.css'
 
-export default function Dashboard( {user} ) {
+export default function Dashboard({ user }) {
 
   const [user_data, set_user_data] = useState({
     imageURL: user.imageURL,
     name: user.firstName,
     email: user.email,
-    level: "faculty",
+    position: "faculty",
     department: "cse",
-    total_leaves: 0,
-    av_leaves: 0,
+    total_casual_leaves: 0,
+    taken_casual_leaves: 0,
+    total_restricted_leaves: 0,
+    taken_restricted_leaves: 0,
+    total_earned_leaves: 0,
+    taken_earned_leaves: 0,
+    total_vacation_leaves: 0,
+    taken_vacation_leaves: 0,
   });
 
+  const [state, setState] = useState(null);
+
+  const handleChange = (e) => {
+    setState(e.target.files[0]);
+  }
+
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', state);
+    fetch(
+      '//localhost:5000/add_users',
+      {
+        method: 'POST',
+        body: formData,
+      }
+    )
+    alert("Users added successfully");
+
+  }
 
   useEffect(() => {
+    let isMounted = true;
     (async () => {
-      try{
-      const resp = await httpClient.get("//localhost:5000/dashboard");
-      set_user_data(resp.data);}
-      catch{
-        window.location.href="/login"
+      try {
+        const resp = await httpClient.get("//localhost:5000/dashboard");
+        console.log(resp.data);
+        set_user_data(resp.data);
+      }
+      catch {
+        // window.location.href = "/login"
       }
     })()
   }, []);
 
   return (
-    <div className="dashboard" style={{ height: "100vh", backgroundImage: `url(${background})`, backgroundPosition: "fixed", backgroundRepeat: "None", backgroundSize: "cover" }}>
-    {/* <div className="Dashboard"> */}
+    // <div className="dashboard" style={{ height: "100vh", backgroundImage: `url(${background})`, backgroundPosition: "fixed", backgroundRepeat: "None", backgroundSize: "cover" }}>
+    <div className="dashboard" style={{ margin: "0px", height: "100vh", backgroundColor: "aliceblue" }}>
+      {/* <div className="Dashboard"> */}
       {/* <header className="jumbotron text-center"> */}
       <h2 className="heading">Dashboard</h2>
       <div className="heading-line"></div>
-      {/* <p>The current time is {user_data.av_leaves} </p>  */}
-      {/* </header> */}
-      {/* <div className="container row" style={{ margin: "auto" }}>
-        <div className="col-md-6" style={{ padding: '40px' }}>
-          <div className="card" style={{border: "2px solid black"}}>
-            <div className="card-body">
-              <div className="d-flex flex-column align-items-center text-center">
-                <img src={user_data.imageURL} alt="Admin" className="rounded-circle" width="150" />
-                <div className="mt-3">
-                  <h4>{user_data.name.toUpperCase()}</h4>
-                  <p className="mb-1">{user_data.level.toUpperCase()}</p>
-                  <p className="mb-1">{user_data.department.toUpperCase()}</p>
-                  <p className="mb-1">{user_data.email}</p>
-                  <a href="leaveForm" style={{margin: "10px"}}>
-                    <button type="button" className="btn btn-primary btn-block">Apply Leave</button>
-                  </a>
-                  <a href="displayLeaves">
-                    <button type="button" className="btn btn-primary btn-block">See Leaves</button>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <div className="col-md-6">
-          <div className="row" style={{ padding: '40px' }}>
-
-            <div className="wrapper col-md-6 " style={{ padding: "20px" }}>
-              <div className="card text-white bg-primary mb-3 "   >
-                <div className="card-header">Total Leaves</div>
-                <div className="card-body text-dark bg-light">
-                  <h5 className="card-title">{user_data.total_leaves}</h5>
-
-                </div>
-              </div>
-            </div>
-
-            <div className="wrapper col-md-6 " style={{ padding: "20px" }}>
-              <div className="card text-white bg-primary mb-3 "  >
-                <div className="card-header">Leaves Taken</div>
-                <div className="card-body text-dark bg-light">
-                  <h5 className="card-title">{user_data.total_leaves - user_data.av_leaves}</h5>
-                </div>
-              </div>
-            </div>
-
-            <div className="wrapper col-md-6 " style={{ padding: "20px" }}>
-              <div className="card text-white bg-primary mb-3 "   >
-                <div className="card-header">Available Leaves</div>
-                <div className="card-body text-dark bg-light">
-                  <h5 className="card-title">{user_data.av_leaves}</h5>
-                </div>
-              </div>
-            </div>
-
-            <div className="wrapper col-md-6 " style={{ padding: "20px" }}>
-              <div className="card text-white bg-primary mb-3 "   >
-                <div className="card-header">Borrowed Leaves</div>
-                <div className="card-body text-dark bg-light">
-                  <h5 className="card-title">2</h5>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-        </div>
-      </div> */}
-
 
       <div className="container">
-    <div className="main-body">
-    
+        <div className="main-body">
+
           <div className="row gutters-sm">
             <div className="col-md-4 mb-3">
-              <div className="card" style={{"border": "2px solid grey"}}>
+              <div className="card" style={{ "border": "2px solid grey" }}>
                 <div className="card-body">
                   <div className="d-flex flex-column align-items-center text-center">
-                  {(user.imageURL == "" || user.imageURL==undefined) ? (<img src={require("../imgs/loginIcon.png")} alt="Admin" className="rounded-circle" width="150" />)
-                  : (<img src={user.imageURL} alt="Admin" className="rounded-circle" width="150" />)}
-                    
+                    {(user.imageURL == "" || user.imageURL == undefined) ? (<img src={require("../imgs/loginIcon.png")} alt="Admin" className="rounded-circle" width="150" />)
+                      : (<img src={user.imageURL} alt="Admin" className="rounded-circle" width="150" />)}
+
                     {/* <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" className="rounded-circle" width="150" /> */}
                     <div className="mt-3">
                       <h4>{user_data.name.toUpperCase()}</h4>
-                      <p className="text-secondary mb-1">{user_data.level.toUpperCase()}</p>
+                      <p className="text-secondary mb-1">{user_data.position.toUpperCase()}</p>
                       <p className="text-secondary mb-1">{user_data.department.toUpperCase()}</p>
                       <p className="text-muted font-size-sm">{user_data.email}</p>
                       {/* <button className="btn btn-primary">Follow</button> */}
-                      <a href="leaveForm" style={{margin: "10px"}}>
-                      <button className="btn btn-outline-primary">Apply Leave</button>
-                      </a>
+                      {(user_data.position == "faculty" || user_data.position == "staff" || user_data.position == undefined || user_data.position == "") ? (
+                        <a href="leaveForm" style={{ margin: "10px" }}>
+                          <button className="btn btn-outline-primary">Apply Leave</button>
+                        </a>
+                      ) : ('')}
                     </div>
                   </div>
                 </div>
@@ -160,44 +123,86 @@ export default function Dashboard( {user} ) {
               </div> */}
             </div>
             <div className="col-md-8">
-              <div className="card mb-3" style={{"border": "2px solid grey"}}>
+              <div className="card mb-3" style={{ "border": "2px solid grey" }}>
                 <div className="card-body" >
                   <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Total Leaves</h6>
+                    <div className="col-sm-6">
+                      <h6 className="mb-0"><b>Leave Type</b></h6>
                     </div>
-                    <div className="col-sm-9 text-secondary">
-                      {user_data.total_leaves}
+                    <div className="col-sm-2">
+                      <h6 className="mb-0"><b>Total</b></h6>
+                    </div>
+                    <div className="col-sm-2">
+                      <h6 className="mb-0"><b>Taken</b></h6>
+                    </div>
+                    <div className="col-sm-2">
+                      <h6 className="mb-0"><b>Remaining</b></h6>
+                    </div>
+                  </div>
+                  <hr />
+
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <h6 className="mb-0">Casual Leaves</h6>
+                    </div>
+                    <div className="col-sm-2">
+                      <h6 className="mb-0">{user_data.total_casual_leaves}</h6>
+                    </div>
+                    <div className="col-sm-2">
+                      <h6 className="mb-0">{user_data.taken_casual_leaves}</h6>
+                    </div>
+                    <div className="col-sm-2">
+                      <h6 className="mb-0">{user_data.total_casual_leaves - user_data.taken_casual_leaves}</h6>
+                    </div>
+
+                  </div>
+                  <hr />
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <h6 className="mb-0">Restricted Leaves</h6>
+                    </div>
+                    <div className="col-sm-2">
+                      <h6 className="mb-0">{user_data.total_restricted_leaves}</h6>
+                    </div>
+                    <div className="col-sm-2">
+                      <h6 className="mb-0">{user_data.taken_restricted_leaves}</h6>
+                    </div>
+                    <div className="col-sm-2">
+                      <h6 className="mb-0">{user_data.total_restricted_leaves - user_data.taken_restricted_leaves}</h6>
                     </div>
                   </div>
                   <hr />
                   <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Leaves Taken</h6>
+                    <div className="col-sm-6">
+                      <h6 className="mb-0">Earned Leaves</h6>
                     </div>
-                    <div className="col-sm-9 text-secondary">
-                      {user_data.total_leaves - user_data.av_leaves}
+                    <div className="col-sm-2">
+                      <h6 className="mb-0">{user_data.total_earned_leaves}</h6>
                     </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Available Leaves</h6>
+                    <div className="col-sm-2">
+                      <h6 className="mb-0">{user_data.taken_earned_leaves}</h6>
                     </div>
-                    <div className="col-sm-9 text-secondary">
-                      {user_data.av_leaves}
+                    <div className="col-sm-2">
+                      <h6 className="mb-0">{user_data.total_earned_leaves - user_data.taken_earned_leaves}</h6>
                     </div>
                   </div>
                   <hr />
                   <div className="row">
-                    <div className="col-sm-3">
-                      <h6 className="mb-0">Borrowed Leaves</h6>
+                    <div className="col-sm-6">
+                      <h6 className="mb-0">Vacation Leaves</h6>
                     </div>
-                    <div className="col-sm-9 text-secondary">
-                      0
+                    <div className="col-sm-2">
+                      <h6 className="mb-0">{user_data.total_vacation_leaves}</h6>
+                    </div>
+                    <div className="col-sm-2">
+                      <h6 className="mb-0">{user_data.taken_vacation_leaves}</h6>
+                    </div>
+                    <div className="col-sm-2">
+                      <h6 className="mb-0">{user_data.total_vacation_leaves - user_data.taken_vacation_leaves}</h6>
                     </div>
                   </div>
                   <hr />
+
                   {/* <div className="row">
                     <div className="col-sm-3">
                       <h6 className="mb-0">Address</h6>
@@ -209,18 +214,37 @@ export default function Dashboard( {user} ) {
                   {/* <hr /> */}
                   <div className="row">
                     <div className="col-sm-12" >
-                    {(user_data.level == "faculty" || user_data.level==undefined || user_data.level == "") ? (
-                      <a className="btn btn-info " style={{"margin": "2px"}} href="displayLeaves">Applied Leaves</a>
-                      ):(
+                      {(user_data.position == "faculty" || user_data.position == "staff" || user_data.position == undefined || user_data.position == "") ? (
+                        <a className="btn btn-info " style={{ "margin": "2px" }} href="displayLeaves">Applied Leaves</a>
+                      ) : (
                         <div>
-                        <a className="btn btn-info " style={{"margin": "2px"}} href="displayLeaves">Applied Leaves</a>
-                      <a className="btn btn-info " style={{"margin": "2px"}} href="checkLeaves">Check Leaves</a>
-                      </div>
+                          {/* <a className="btn btn-info " style={{ "margin": "2px" }} href="displayLeaves">Applied Leaves</a> */}
+                          <a className="btn btn-info " style={{ "margin": "2px" }} href="checkLeaves">Check Leaves</a>
+                        </div>
                       )}
                     </div>
                   </div>
                 </div>
               </div>
+
+              {(user_data.position == "staff" || user_data.position == "Staff") ? (
+                <div className="card mb-3" style={{ "border": "2px solid grey" }}>
+                  <div className="card-body" >
+                    <h2>Add Users</h2>
+                    <div className="row">
+                      <div className="col-sm-12" style={{ "padding": "0px", "margin": "0px" }}>
+                        <form onSubmit={handleSubmit}>
+                          <input onChange={handleChange} type="file" />
+                          <input type="submit" value="Upload" />
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                ''
+              )}
+
 
               {/* <div className="row gutters-sm">
                 <div className="col-sm-6 mb-3">
@@ -285,7 +309,7 @@ export default function Dashboard( {user} ) {
           </div>
 
         </div>
-    </div>
+      </div>
 
     </div>
   );

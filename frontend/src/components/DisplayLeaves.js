@@ -20,6 +20,7 @@ export default function DisplayLeaves() {
       const resp = await httpClient.post("//localhost:5000/fetchLeaves");
       setLeaves(resp["data"]['result'])
       setShowLeaves(resp["data"]['result'])
+      console.log("HHHH - ", resp["data"]['result'])
       return resp["data"]["result"]
       //   window.location.href = '/otpVerification';
     } catch (error) {
@@ -39,7 +40,7 @@ export default function DisplayLeaves() {
 
   const saveLeave = (leave_id) => {
     let doc = new jsPDF("portrait", "pt", "a3");
-    doc.html(document.querySelector("#modal-" + leave_id + " .table"), {
+    doc.html(document.querySelector("#modal-" + leave_id), {
       width: 200,
 
       callback: function (pdf) {
@@ -107,7 +108,7 @@ export default function DisplayLeaves() {
               <div className="modal-body">
                 <table className='table'>
                   <tbody>
-                    <tr>
+                    <tr style={{margin: "1px"}}>
                       <td><b>Leave Id:</b></td>
                       <td>{leave.id}</td>
                     </tr>
@@ -143,6 +144,10 @@ export default function DisplayLeaves() {
                     <tr>
                       <td><b>Authority Comment: </b></td>
                       <td>{leave.authority_comment}</td>
+                    </tr>
+                    <tr>
+                      <td><b>Attached Document: </b></td>
+                      <td><a href={leave.file_uploaded}>PDF</a></td>
                     </tr>
                   </tbody>
                 </table>

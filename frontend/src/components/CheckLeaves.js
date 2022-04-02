@@ -12,7 +12,7 @@ export default function CheckLeaves({ user }) {
   }
 
   const [leaves, setLeaves] = useState([]);
-  const [headers, setHeaders] = useState(["Leave Id", "Nature", "Email Id", "Start Date", "Status"]);
+  const [headers, setHeaders] = useState(["Leave Id", "Nature", "Name", "Start Date", "Status"]);
   const [data, setData] = useState([-1]);
 
   const fetchLeaves = async (e) => {
@@ -32,7 +32,7 @@ export default function CheckLeaves({ user }) {
   const updateData = (x) => {
     let temp = [];
     for (let i = 0; i < x.length; i++) {
-      temp.push([x[i].id, x[i].nature, x[i].email, x[i].start_date.slice(0, -12), x[i].status]);
+      temp.push([x[i].id, x[i].nature, x[i].name, x[i].start_date.slice(0, -12), x[i].status]);
     }
     setData(temp);
   }
@@ -61,7 +61,7 @@ export default function CheckLeaves({ user }) {
       setLeaves(temp);
       console.log(leaves);
 
-      const resp = await httpClient.post("//localhost:5000/approve_leave", { leave_id });
+      const resp = await httpClient.post("//localhost:5000/approve_leave", { leave_id, level : user.level });
       window.location.reload();
     } catch (error) {
       alert("Some error occurred");
@@ -149,11 +149,11 @@ export default function CheckLeaves({ user }) {
                     </tr>
                     <tr>
                       <td><b>Total Leaves of Faculty</b></td>
-                      <td>10</td>
+                      <td>{leave[leave.key1]}</td>
                     </tr>
                     <tr>
                       <td><b>Balance as on Date</b></td>
-                      <td>5</td>
+                      <td>{leave[leave.key1] - leave[leave.key2]}</td>
                     </tr>
                     <tr>
                       <td><b>End Date of leave: </b></td>
@@ -177,10 +177,10 @@ export default function CheckLeaves({ user }) {
                     </tr>
                   </tbody>
                 </table>
-                {/* <textarea id={"comment-" + leave.id} placeholder="Add Comment" style={{ "width": "250px" }}></textarea> */}
+                <textarea id={"comment-" + leave.id} placeholder="Add Comment" style={{ "width": "250px" }}></textarea>
               </div>
               <div className="modal-footer">
-                {(leave.status == "Pending") ? (
+                {(leave.status == "Pending" || (user.level == "dean" && leave.status == "Approved By Hod")) ? (
                   <>
                     <button type="button" className="btn btn-outline-success" onClick={() => { approveLeave(leave.id) }}>Approve</button>
                     <button type="button" className="btn btn-outline-danger" onClick={() => { disapproveLeave(leave.id) }}>Disapprove</button>

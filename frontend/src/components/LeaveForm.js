@@ -3,7 +3,7 @@ import httpClient from "../httpClient";
 import '../css/LeaveForm.css';
 import { isDate, isEmail, isName } from "./helpers/validators";
 
-export default function LeaveForm({user}) {
+export default function LeaveForm({ user }) {
   const [state, setState] = useState({
     name: user.firstName,
     email: user.email,
@@ -18,6 +18,12 @@ export default function LeaveForm({user}) {
     altArrangements: "",
     errorMsg: "",
   });
+
+  const [fileState, setFileState] = useState(null)
+  const onFileChange = (event) => {
+    console.log("onfilevhange")
+    setFileState(event.target.files[0]);
+  };
 
   const validate = () => {
     let flag = 1;
@@ -36,30 +42,30 @@ export default function LeaveForm({user}) {
     } else if (!isName(state.purpose)) {
       setState({ ...state, errorMsg: "Please enter valid reason" });
       flag = 0;
-    }else if (!isName(state.nature)) {
+    } else if (!isName(state.nature)) {
       setState({ ...state, errorMsg: "Please enter valid nature" });
       flag = 0;
-    }else if (!isName(state.duration)) {
+    } else if (!isName(state.duration)) {
       setState({ ...state, errorMsg: "Please enter valid duration" });
       flag = 0;
-    }else if (!isName(state.purpose)) {
+    } else if (!isName(state.purpose)) {
       setState({ ...state, errorMsg: "Please enter valid reason" });
       flag = 0;
-    }else if (!isName(state.phone)) {
+    } else if (!isName(state.phone)) {
       setState({ ...state, errorMsg: "Please enter valid Phone Number" });
       flag = 0;
-    }   else {
+    } else {
       setState({ ...state, errorMsg: "" });
     }
     if (flag) return true;
     return false;
   };
 
-  const sendApplication = ()=>{
+  const sendApplication = () => {
     // console.log("H", state);
   }
 
-  const handleSubmit = async (e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const name = document.getElementById('form_name').value;
     const email = document.getElementById('form_email').value;
@@ -71,16 +77,29 @@ export default function LeaveForm({user}) {
     const edate = document.getElementById('form_edate').value;
     const purpose = document.getElementById('form_purpose').value;
     const altArrangements = document.getElementById('form_altArrangements').value;
-    setState(prevState=> ({ ...prevState, name: name }));
-    setState(prevState=> ({ ...prevState, email: email }));
-    setState(prevState=> ({ ...prevState, phone: phone }));
-    setState(prevState=> ({ ...prevState, nature: nature }));
-    setState(prevState=> ({ ...prevState, duration: duration }));
-    setState(prevState=> ({ ...prevState, isStation: isStation }));
-    setState(prevState=> ({ ...prevState, sdate: sdate }));
-    setState(prevState=> ({ ...prevState, edate: edate }));
-    setState(prevState=> ({ ...prevState, purpose: purpose }));
-    setState(prevState=>({ ...prevState, altArrangements: altArrangements }));
+
+    // changedtoc
+    if (isNaN(duration)) {
+      setState({ ...state, errorMsg: "Please enter valid Duration" });
+      alert("Error, Check the duration again")
+      return;
+    }
+    else if (parseInt(duration * 10) % (5) != 0) {
+      setState({ ...state, errorMsg: "Please enter valid Duration" });
+      alert("Error, Check the duration again")
+      return;
+    }
+
+    setState(prevState => ({ ...prevState, name: name }));
+    setState(prevState => ({ ...prevState, email: email }));
+    setState(prevState => ({ ...prevState, phone: phone }));
+    setState(prevState => ({ ...prevState, nature: nature }));
+    setState(prevState => ({ ...prevState, duration: duration }));
+    setState(prevState => ({ ...prevState, isStation: isStation }));
+    setState(prevState => ({ ...prevState, sdate: sdate }));
+    setState(prevState => ({ ...prevState, edate: edate }));
+    setState(prevState => ({ ...prevState, purpose: purpose }));
+    setState(prevState => ({ ...prevState, altArrangements: altArrangements }));
 
     const myObj = {
       name: name,
@@ -94,13 +113,33 @@ export default function LeaveForm({user}) {
       isStation: isStation,
       purpose: purpose,
       altArrangements: altArrangements,
+      doc: fileState,
     }
+
+    const data = new FormData()
+    data.append('name', name)
+    data.append('email', email)
+    data.append('phone', phone)
+    data.append('duration', duration)
+    data.append('rdate', (new Date()).toISOString().substr(0, 10),)
+    data.append('sdate', sdate)
+    data.append('edate', edate)
+    data.append('nature', nature)
+    data.append('isStation', isStation)
+    data.append('purpose', purpose)
+    data.append('docc', fileState)
+    data.append('altArrangements', altArrangements)
+
     console.log("State: ", state);
     console.log("My Obj: ", myObj);
 
     document.querySelector('.leaveform button').classList.add('disabled');
     try {
-      const resp = await httpClient.post("//localhost:5000/leave_application", { myObj });
+      const resp = await httpClient.post("//localhost:5000/leave_application", data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       console.log("Response:", resp);
       alert("Leave Successfully Applied");
     } catch (error) {
@@ -132,10 +171,16 @@ export default function LeaveForm({user}) {
             <div className="form-group col-md-6">
               <legend htmlFor="form_nature">Nature of leave</legend>
               <select className="form-control" id="form_nature">
-                <option>CL</option>
-                <option>RH</option>
-                <option>SCL</option>
-                <option>On Duty</option>
+                <option>Casual Leave</option>
+                <option>Restricted Leave</option>
+                <option>Earned Leave</option>
+                <option>Vacation Leave</option>
+                <option>Special Leave</option>
+                <option>Commuted Leave</option>
+                <option>Hospital Leave</option>
+                <option>Study Leave</option>
+                <option>Childcare Leave</option>
+                <option>Other Leave</option>
               </select>
             </div>
           </div>
@@ -143,7 +188,7 @@ export default function LeaveForm({user}) {
           <div className="form-row">
             <div className="form-group col-md-6">
 
-              <legend htmlFor="form_isStation">Is satation leave?</legend>
+              <legend htmlFor="form_isStation">Is station leave?</legend>
               <select className="form-control" id="form_isStation">
                 <option>Yes</option>
                 <option>No</option>
@@ -177,6 +222,11 @@ export default function LeaveForm({user}) {
             <textarea id="form_altArrangements" className="form-control" defaultValue={state.altArrangements}>
             </textarea>
           </div>
+
+          <div style={{ padding: 20 }}>
+            <input type="file" name="file" onChange={onFileChange} />
+          </div>
+
           <button type="submit" onClick={handleSubmit} className="btn btn-primary btn-block">Apply for leave</button>
         </form>
       </div>

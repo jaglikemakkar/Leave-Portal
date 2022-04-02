@@ -13,7 +13,8 @@ class Table extends Component {
       initialData: this.props.initialData,
       sortby: null,
       descending: false,
-      edit: {}
+      edit: {},
+      search: true,
 
     };
 
@@ -24,6 +25,7 @@ class Table extends Component {
     this._search = this._search.bind(this);
     this._toggleSearch = this._toggleSearch.bind(this);
     this._renderToolbar = this._renderToolbar.bind(this);
+    this._preSearchData = this.state.initialData;
 
 
   }
@@ -179,7 +181,7 @@ class Table extends Component {
     return (
       <div>
         {this._renderTable()}
-        {this._renderToolbar()}
+        {/* {this._renderToolbar()} */}
       </div>
     )
   }
