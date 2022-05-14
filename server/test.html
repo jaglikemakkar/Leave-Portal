@@ -2,126 +2,158 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,
-                    initial-scale=1, shrink-to-fit=no">
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="test.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
 </head>
 
 <body>
-    <div class="container mt-5">
-        <div class="d-flex justify-content-center row">
-            <div class="col-md-10">
-                <div class="rounded">
-                    <div class="table-responsive table-borderless">
-                        <table class="table" id="tableID">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">S. No.</th>
-                                    <th>Order #</th>
-                                    <th>Company name</th>
-                                    <th>status</th>
-                                    <th>Total</th>
-                                    <th>Created</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody class="table-body">
-                                <tr class="cell-1" data-toggle="modal" data-target="#exampleModal">
-                                    <td class="text-center">1</td>
-                                    <td>#SO-13487</td>
-                                    <td>Gasper Antunes</td>
-                                    <td><span class="badge badge-danger">Fullfilled</span></td>
-                                    <td>$2674.00</td>
-                                    <td>Today</td>
-                                    <td class="table-elipse" data-toggle="collapse" data-target="#demo"><i
-                                            class="fa fa-ellipsis-h text-black-50"></i></td>
-                                </tr>
-                                <tr class="cell-1" data-toggle="collapse" data-target="#demo-2">
-                                    <td class="text-center">2</td>
-                                    <td>#SO-13488</td>
-                                    <td>Tinder Steel</td>
-                                    <td><span class="badge badge-success">Fullfilled</span></td>
-                                    <td>$3664.00</td>
-                                    <td>Yesterday</td>
-                                    <td class="table-elipse" data-toggle="collapse" data-target="#demo"><i
-                                            class="fa fa-ellipsis-h text-black-50"></i></td>
-                                </tr>
-                                <tr class="cell-1" data-toggle="collapse" data-target="#demo-3">
-                                    <td class="text-center">3</td>
-                                    <td>#SO-13489</td>
-                                    <td>Micro Steel</td>
-                                    <td><span class="badge badge-success">Placed</span></td>
-                                    <td>$2674.00</td>
-                                    <td>March 20, 2020</td>
-                                    <td class="table-elipse" data-toggle="collapse" data-target="#demo"><i
-                                            class="fa fa-ellipsis-h text-black-50"></i></td>
-                                </tr>
-                                <tr class="cell-1" data-toggle="collapse" data-target="#demo-4">
-                                    <td class="text-center">4</td>
-                                    <td>#SO-13490</td>
-                                    <td>B Mobiles</td>
-                                    <td><span class="badge badge-success">Delivered</span></td>
-                                    <td>$4674.00</td>
-                                    <td>March 22, 2020</td>
-                                    <td class="table-elipse" data-toggle="collapse" data-target="#demo"><i
-                                            class="fa fa-ellipsis-h text-black-50"></i></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+    <div class="container">
+        <br>
+        <div class="row header text-center">
+            <div class="col-3 header-left">
+                <img src="https://upload.wikimedia.org/wikipedia/en/f/f9/Indian_Institute_of_Technology_Ropar_logo.png"
+                    width="150px" height="150px">
+            </div>
+            <div class="col-9 header-right">
+                <h3>भारतीय प्रौद्योगिकी संस्थान रोपड़</h3>
+                <h3>INDIAN INSTITUTE OF TECHNOLOGY ROPAR</h3>
+                <p>नंगल विभाग रूपनगर,पंजाब-140001 / Nangal Road, Rupnagar, Punjab-140001</p>
+                <p>दूरभाष/Tele:+91-1881-227088, फेक्स/Fax :+91-1881-223395</p>
+            </div>
+        </div>
+        <hr>
+
+        <div class="leave-details text-center">
+            <div class="row leave-details-heading">
+                <div class="col-3"></div>
+                <div class="col-6 text-center">
+                    <p>आकस्मिक छुट्टी/ राजपत्रित अवकाश / विशेष आकस्मिक छुट्टि हेतू आवेदन पत्र
+                        APPLICATION FORM FOR CASUAL LEAVE / RESTRICTED HOLIDAY /
+                        SPECIAL CASUAL LEAVE / ON DUTY</p>
+                </div>
+            </div>
+
+            <div class="row" style="border: 1px solid">
+                <div class="col-6">नाम / Name</div>
+                <div class="col-1">:</div>
+                <div class="col-5">Jaglike Makkar</div>
+            </div>
+            <div class="row" style="border: 1px solid">
+                <div class="col-6">पदनाम/ विभाग<br>Designation / Department</div>
+                <div class="col-1">:</div>
+                <div class="col-5">Faculty</div>
+            </div>
+            <div class="row" style="border: 1px solid">
+                <div class="col-6">आवश्यक छुट्टी का मवरूऩ : आकस्ममक छुट्टी / राज.अव./त्रव.आ.छुट्टी <br>Nature of Leave
+                    Required : CL / RH / SCL/ ON DUTY</div>
+                <div class="col-1">:</div>
+                <div class="col-5">CL</div>
+            </div>
+            <div class="row" style="border: 1px solid">
+                <div class="col-6">उद्देश्य / Purpose
+                    (के वऱ त्रवशेष आकस्ममक छुट्टी के लऱए लनमॊिण ऩि की प्रलत सॊऱगन करं)
+                    /<br>
+                    (Copy of the invitation letter enclosed in case of SCL only)</div>
+                <div class="col-1">:</div>
+                <div class="col-5">This is the purpose</div>
+            </div>
+            <div class="row" style="border: 1px solid">
+                <div class="col-6">कऺाएॊ, प्रशासलनक स्जम्मेदारी आदद (यदद कोई हो तो) के लऱए वैकस्पऩक
+                    व्यवमथा /<br>
+                    Alternative arrangements for classes, administrative responsibilities,
+                    etc. (if any)</div>
+                <div class="col-1">:</div>
+                <div class="col-5">These are arrangements</div>
+            </div>
+            <div class="row" style="border: 1px solid">
+                <div class="col-6">क्या मटेशन छोडना अऩेस्ऺत है?<br>
+                    Whether Station leave is required?</div>
+                <div class="col-1">:</div>
+                <div class="col-5">Yes</div>
+            </div>
+            <div class="row" style="border: 1px solid">
+                <div class="col-6">छुट्टी के दौरान का ऩता<br>
+                    Address during the leave/on duty</div>
+                <div class="col-1">:</div>
+                <div class="col-5">Bathinda, Punjab</div>
+            </div>
+
+            <div class="row leave-details-signature">
+                <div class="col-6"></div>
+                <div class="col-6">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Signature_of_Ann_Miller.svg/1280px-Signature_of_Ann_Miller.svg.png"
+                        witdh="80px" height="80px"><br>
+                    आवेदक के हमताऺर ददनाॊक सदहत/Signature with date of the applicant
+                </div>
+
+            </div>
+        </div>
+
+        <hr>
+        <div class="establishment-office text-center">
+            <p><b>त्रवभाग कायााऱय / प्रशासलनक अनुभाग द्वारा प्रयोग हेतु/ For use by the Department Office /
+                    Establishment Section</b></p>
+            <div class="row" style="border: 1px solid">
+                <div class="col-4">Balance as on Date /<br>आज तक शेष</div>
+                <div class="col-4">Leave Applied For (No. of days) /<br>छुट्टी के लऱए आवेदन (ददन)</div>
+                <div class="col-4">Balance / <br>शेष</div>
+            </div>
+            <div class="row">
+                <div class="col-4" style="border: 1px solid">7</div>
+                <div class="col-4" style="border: 1px solid">3</div>
+                <div class="col-4" style="border: 1px solid">4</div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-6">
+                    <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Signature_of_Ann_Miller.svg/1280px-Signature_of_Ann_Miller.svg.png"
+                        witdh="80px" height="80px"><br> -->
+                    <br>
+                    <br>
+                    <br>
+                    सॊबॊलधत सहायक (त्रवभाग)/(मथाऩना)/Dealing Asstt. (Deptt.)/(Estt.)
+                </div>
+                <div class="col-6">
+                    <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Signature_of_Ann_Miller.svg/1280px-Signature_of_Ann_Miller.svg.png"
+                        witdh="80px" height="80px"><br> -->
+                    <br>
+                    <br>
+                    <br>
+                    अधी./सहा.कु ऱसलिव/उऩकु ऱसलिव/Supdt./AR/DR
+                </div>
+
+            </div>
+        </div>
+        <hr>
+        <div class="footer">
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-8">
+                    <br>
+                    <br>
+                    छुट्टी प्रदान करनेके लऱए सऺम प्रालधकारी की दटप्ऩणी: मवीकृ त/अमवीकृ त<br>
+                    Comments of the competent authority to grant leave: Sanctioned / Not Sanctioned
+                </div>
+            </div>
+            <br>
+            <br>
+            <div class="row">
+                <div class="col-4"></div>
+                <div class="col-8">
+                    <br>
+                    <br>
+                    (त्रवभागाध्यऺ / कु ऱसलिव / अलधष्ठाता (सॊकाय मामऱेएवॊप्रशासन) / लनदेशक)<br>
+                    (HoD / Registrar / Dean(Faculty Affairs & Administration) )
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="fancyTable.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-
-            $("#tableID").fancyTable({
-                sortColumn: 0,
-                /* Setting pagination or enabling */
-                pagination: true,
-                perpage: 10,
-                globalSearch: true,
-                /* Exclude 2nd column from global search.*/
-                globalSearchExcludeColumns: [2],
-                onInit: function () {
-                    /* On initialization of table */
-                    console.log({ element: this });
-                },
-                onUpdate: function () {
-                    /* On update like search and sort of table */
-                    console.log({ element: this });
-                }
-            });
-        });            
-    </script>
 </body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js"></script>
 
 </html>

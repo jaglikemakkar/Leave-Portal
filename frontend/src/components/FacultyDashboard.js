@@ -53,7 +53,7 @@ export default function Dashboard({ user }) {
     (async () => {
       try {
         const resp = await httpClient.get("//localhost:5000/dashboard");
-        console.log(resp.data);
+        // console.log(resp.data);
         set_user_data(resp.data);
       }
       catch {
@@ -74,6 +74,10 @@ export default function Dashboard({ user }) {
         <div className="main-body">
 
           <div className="row gutters-sm">
+
+          {(user_data.position == "faculty" || user_data.position == "staff" || user_data.position == undefined || user_data.position == "") ? (
+                        <a className="btn btn-info " style={{ "margin": "2px" }} href="displayLeaves">Applied Leaves</a>
+                      ) : ('')}
             <div className="col-md-4 mb-3">
               <div className="card" style={{ "border": "2px solid grey" }}>
                 <div className="card-body">

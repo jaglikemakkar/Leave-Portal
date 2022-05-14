@@ -2,6 +2,7 @@ from tkinter import E
 from flask import Flask, jsonify, render_template, url_for, request, session, redirect, Response
 from flask_pymongo import PyMongo
 from matplotlib.pyplot import connect
+from py import code
 from pymongo import MongoClient
 from flaskext.mysql import MySQL
 from authlib.integrations.flask_client import OAuth
@@ -217,6 +218,54 @@ def findNextLeaveID():
     except:
         return 1
 
+from pydrive.drive import GoogleDrive
+from pydrive.auth import GoogleAuth
+import os,shutil
+
+access_token = "ya29.A0ARrdaM-8QJ_S9aKWmyilK53YTUsf3siX1f2TeS_zf7bgEEc8wDILzgzYQ8hkX7EGaMpdpTL37o-wF1LV1RLSl7ITHN6CrjhlbCpP-w2ExEIqtFRkf-PGUkP2m7f-x7xC1oVDTTctwX482ytbEmmk5QJYJf1t"
+
+import json
+import requests
+class GoogleDrive:
+    def __init__(self,access_token):
+        self.headers = {"Authorization": "Bearer {}".format(access_token)}
+    def uploadFile(self,file_path, filename):
+        para = {"name": filename} # name of the file after upoading
+        files = {
+            'data': ('metadata', json.dumps(para), 'application/json; charset=UTF-8'),
+            'file': open(file_path, "rb")
+        }
+        r = requests.post("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",headers=self.headers,files=files)
+        print(r.text)
+        return
+
+GD = GoogleDrive(access_token)
+# GD.uploadFile("C:\\Users\\ACER\\3D Objects\\Leave-Portal-main\\server\\Invoice- April Cycle.pdf")
+
+# def upload(path,file_name):
+#     gauth = GoogleAuth()
+#     gauth.LocalWebserverAuth()	
+#     drive = GoogleDrive(gauth)
+#     f = drive.CreateFile({'title': file_name})
+#     f.SetContentFile(path)
+#     f.Upload()
+#     f = None
+
+def empty_the_folder(folder_path):
+    folder = folder_path
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+            
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
+            return 0
+    return 1
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -299,8 +348,13 @@ def leave_application():
     if 'docc' in request.files:
         dataa['docc'] = request.files['docc']
         ff = dataa['docc']
-        ff.save(os.getcwd()+'/files/doc'+ str(findNextLeaveID()) + '.pdf')
-        dataa['docc'] = os.getcwd()+'./files/doc'+ str(findNextLeaveID()) + '.pdf'
+        file_name = 'doc{}.pdf'.format(findNextLeaveID())
+        ff.save(os.getcwd()+'\\files\\' + file_name)
+        dataa['docc'] = os.getcwd()+'.\\files\\' + file_name
+        # upload(dataa['docc'],file_name)
+        GD.uploadFile(dataa['docc'], file_name)
+        empty_the_folder(os.getcwd()+'\\files')
+
     else:
         dataa['docc'] = ""
     status = insert_leave(dataa)
@@ -347,6 +401,8 @@ def check_leaves():
             department = %s and level = %s',(department, "Faculty"))
     elif position == 'dean':
         cursor.execute('SELECT * FROM leaves')
+    elif position == 'establishment':
+        cursor.execute("SELECT * FROM leaves")
     leaves = cursor.fetchall()
     payload = []
 
@@ -380,12 +436,20 @@ def check_leaves():
                 payload.append(content)
         elif position == 'hod':
             payload.append(content)
+        elif position == 'establishment':
+            if content['status'] == 'Approved By Hod':
+                payload.append(content)
 
     return jsonify(result = payload)
 
 @app.route('/approve_leave', methods = ['POST'])
 def approve_leave():
     leave_id = request.json['leave_id']
+    if "approved" not in session:
+        session['approved'] = {}
+    if leave_id in session['approved']:
+        return success_code
+    session['approved'][leave_id] = 1
     user = get_user_dic(session['user_info']['email'])
 
     connect = db.connect()
@@ -410,17 +474,15 @@ def approve_leave():
     cursor.execute(query)
     data = cursor.fetchall()[0]
     taken_cnt = float(data[0]) + duration
-    print("HHHHHHHHH")
-    if (nature == "Casual Leave" or nature == "Restricted Leave") and user['position']=='hod':
-        print("YYYYYYYYY")
+    if (nature == "casual_leave" or nature == "restricted_leave") and user['position']=='hod':
+        print("HHHHHHHHHHHHHHHH")
         query = "Update user set %s = %s where user_id = %s" % (u_st2, taken_cnt, user_id)
         cursor.execute(query)
-    elif nature != "Casual Leave" and nature != "Restricted Leave" and user['position']=='dean':
-        print('ZZZZZZZZZZ')
+    elif nature != "casual_leave" and nature != "reastricted_leave" and user['position']=='dean':
         query = "Update user set %s = %s where user_id = %s" % (u_st2, taken_cnt, user_id)
         cursor.execute(query)
     connect.commit()
-    send_update_mail(leave_id)
+    # send_update_mail(leave_id)
     return success_code
 
 @app.route('/disapprove_leave', methods = ['POST'])

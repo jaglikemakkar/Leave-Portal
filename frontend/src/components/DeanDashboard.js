@@ -88,11 +88,6 @@ export default function Dashboard({ user }) {
                       <p className="text-secondary mb-1">{user_data.department.toUpperCase()}</p>
                       <p className="text-muted font-size-sm">{user_data.email}</p>
                       {/* <button className="btn btn-primary">Follow</button> */}
-                      {(user_data.position == "faculty" || user_data.position == "staff" || user_data.position == undefined || user_data.position == "") ? (
-                        <a href="leaveForm" style={{ margin: "10px" }}>
-                          <button className="btn btn-outline-primary">Apply Leave</button>
-                        </a>
-                      ) : ('')}
                     </div>
                   </div>
                 </div>
@@ -125,84 +120,6 @@ export default function Dashboard({ user }) {
             <div className="col-md-8">
               <div className="card mb-3" style={{ "border": "2px solid grey" }}>
                 <div className="card-body" >
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <h6 className="mb-0"><b>Leave Type</b></h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0"><b>Total</b></h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0"><b>Taken</b></h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0"><b>Remaining</b></h6>
-                    </div>
-                  </div>
-                  <hr />
-
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <h6 className="mb-0">Casual Leaves</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_casual_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.taken_casual_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_casual_leaves - user_data.taken_casual_leaves}</h6>
-                    </div>
-
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <h6 className="mb-0">Restricted Leaves</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_restricted_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.taken_restricted_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_restricted_leaves - user_data.taken_restricted_leaves}</h6>
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <h6 className="mb-0">Earned Leaves</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_earned_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.taken_earned_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_earned_leaves - user_data.taken_earned_leaves}</h6>
-                    </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <h6 className="mb-0">Vacation Leaves</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_vacation_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.taken_vacation_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_vacation_leaves - user_data.taken_vacation_leaves}</h6>
-                    </div>
-                  </div>
-                  <hr />
-
                   {/* <div className="row">
                     <div className="col-sm-3">
                       <h6 className="mb-0">Address</h6>

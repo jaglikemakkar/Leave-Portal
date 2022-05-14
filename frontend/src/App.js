@@ -9,7 +9,7 @@ import OtpVerification from "./components/OtpVerification.js"
 import LeaveForm from "./components/LeaveForm.js"
 import DisplayLeaves from "./components/DisplayLeaves.js"
 import CheckLeaves from "./components/CheckLeaves.js"
-
+import DeanDashboard from "./components/Dashboard.js"
 import Navbar from './components/Navbar.js'
 import './css/App.css';
 
@@ -30,7 +30,7 @@ function App() {
         setUser(prevUser => ({ ...prevUser, level: data['level'] }));
         setUser(prevUser => ({ ...prevUser, firstName: data['name'] }));
         setUser(prevUser => ({ ...prevUser, email: data['email'] }));
-        // console.log("USER ", user);
+        console.log("USER ", user);
       } catch (error) {
         console.log("Not authenticated");
       }

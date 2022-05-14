@@ -175,6 +175,10 @@ export default function CheckLeaves({ user }) {
                       <td><b>Authority Comment: </b></td>
                       <td>{leave.authority_comment}</td>
                     </tr>
+                    <tr>
+                      <td><b>Attached Document: </b></td>
+                      <td><a href={leave.file_uploaded}>Attachement</a></td>
+                    </tr>
                   </tbody>
                 </table>
                 <textarea id={"comment-" + leave.id} placeholder="Add Comment" style={{ "width": "250px" }}></textarea>

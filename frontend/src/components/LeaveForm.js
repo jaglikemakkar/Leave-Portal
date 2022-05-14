@@ -21,7 +21,6 @@ export default function LeaveForm({ user }) {
 
   const [fileState, setFileState] = useState(null)
   const onFileChange = (event) => {
-    console.log("onfilevhange")
     setFileState(event.target.files[0]);
   };
 
@@ -154,11 +153,11 @@ export default function LeaveForm({ user }) {
         <form>
           <div className="form-row">
             <div className="form-group col-md-6">
-              <legend htmlFor="form_name">Name</legend>
+              <legend htmlFor="form_name">Name *</legend>
               <input type="text" className="form-control" id="form_name" placeholder="Name" defaultValue={state.name} />
             </div>
             <div className="form-group col-md-6">
-              <legend htmlFor="form_email">Email</legend>
+              <legend htmlFor="form_email">Email *</legend>
               <input type="email" className="form-control" id="form_email" placeholder="Email" defaultValue={state.email} />
             </div>
           </div>
@@ -169,7 +168,7 @@ export default function LeaveForm({ user }) {
               <input type="tel" className="form-control" id="form_phone" placeholder="Phone Number" defaultValue={state.phone} />
             </div>
             <div className="form-group col-md-6">
-              <legend htmlFor="form_nature">Nature of leave</legend>
+              <legend htmlFor="form_nature">Nature of leave *</legend>
               <select className="form-control" id="form_nature">
                 <option>Casual Leave</option>
                 <option>Restricted Leave</option>
@@ -188,14 +187,14 @@ export default function LeaveForm({ user }) {
           <div className="form-row">
             <div className="form-group col-md-6">
 
-              <legend htmlFor="form_isStation">Is station leave?</legend>
+              <legend htmlFor="form_isStation">Is station leave? *</legend>
               <select className="form-control" id="form_isStation">
                 <option>Yes</option>
                 <option>No</option>
               </select>
             </div>
             <div className="form-group col-md-6">
-              <legend htmlFor="form_duration">Duration of leave</legend>
+              <legend htmlFor="form_duration">Duration of leave *</legend>
               <input type="number" className="form-control" id="form_duration" placeholder="Duration" defaultValue={state.duration} />
             </div>
           </div>
@@ -212,7 +211,7 @@ export default function LeaveForm({ user }) {
           </div>
 
           <div className="form-group">
-            <legend htmlFor="form_purpose">Purpose of leave</legend>
+            <legend htmlFor="form_purpose">Purpose of leave *</legend>
             <textarea id="form_purpose" className="form-control" defaultValue={state.purpose}>
             </textarea>
           </div>

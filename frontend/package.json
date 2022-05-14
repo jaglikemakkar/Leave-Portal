@@ -10,6 +10,7 @@
     "@testing-library/react": "^12.1.3",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.0",
+    "html2canvas": "^1.4.1",
     "jquery": "^3.6.0",
     "jquery.fancytable": "^1.0.28",
     "jspdf": "^2.5.1",
