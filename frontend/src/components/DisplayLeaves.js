@@ -9,7 +9,7 @@ import { faPrint } from '@fortawesome/free-solid-svg-icons'
 import html2canvas from "html2canvas";
 import { jsPDF } from 'jspdf';
 
-export default function DisplayLeaves() {
+export default function DisplayLeaves({ user }) {
 
   const [leaves, setLeaves] = useState([]);
   const [showLeaves, setShowLeaves] = useState([])
@@ -21,6 +21,7 @@ export default function DisplayLeaves() {
       const resp = await httpClient.post("//localhost:5000/fetchLeaves");
       setLeaves(resp["data"]['result'])
       setShowLeaves(resp["data"]['result'])
+      console.log(resp['data']['result'])
       return resp["data"]["result"]
       //   window.location.href = '/otpVerification';
     } catch (error) {
@@ -82,7 +83,7 @@ export default function DisplayLeaves() {
 
 
 
-
+  console.log("Userrrr", user);
 
   useEffect(() => {
     (async () => {
@@ -216,18 +217,18 @@ export default function DisplayLeaves() {
                     <div className="row" style={{ border: "1px solid" }}>
                       <div className="col-6">नाम / Name</div>
                       <div className="col-1">:</div>
-                      <div className="col-5">Jaglike Makkar</div>
+                      <div className="col-5">{user.firstName}</div>
                     </div>
                     <div className="row" style={{ border: "1px solid" }}>
                       <div className="col-6">पदनाम/ विभाग<br />Designation / Department</div>
                       <div className="col-1">:</div>
-                      <div className="col-5">Faculty</div>
+                      <div className="col-5">{leave.department.toUpperCase()}</div>
                     </div>
                     <div className="row" style={{ border: "1px solid" }}>
                       <div className="col-6">आवश्यक छुट्टी का मवरूऩ : आकस्ममक छुट्टी / राज.अव./त्रव.आ.छुट्टी <br />Nature of Leave
                         Required : CL / RH / SCL/ ON DUTY</div>
                       <div className="col-1">:</div>
-                      <div className="col-5">CL</div>
+                      <div className="col-5">{leave.nature}</div>
                     </div>
                     <div className="row" style={{ border: "1px solid" }}>
                       <div className="col-6">उद्देश्य / Purpose
@@ -235,7 +236,7 @@ export default function DisplayLeaves() {
                         /<br />
                         (Copy of the invitation letter enclosed in case of SCL only)</div>
                       <div className="col-1">:</div>
-                      <div className="col-5">This is the purpose</div>
+                      <div className="col-5">{leave.purpose}</div>
                     </div>
                     <div className="row" style={{ border: "1px solid" }}>
                       <div className="col-6">कऺाएॊ, प्रशासलनक स्जम्मेदारी आदद (यदद कोई हो तो) के लऱए वैकस्पऩक
@@ -243,19 +244,19 @@ export default function DisplayLeaves() {
                         Alternative arrangements for classes, administrative responsibilities,
                         etc. (if any)</div>
                       <div className="col-1">:</div>
-                      <div className="col-5">These are arrangements</div>
+                      <div className="col-5">These are alternative arrangements</div>
                     </div>
                     <div className="row" style={{ border: "1px solid" }}>
                       <div className="col-6">क्या मटेशन छोडना अऩेस्ऺत है?<br />
                         Whether Station leave is required?</div>
                       <div className="col-1">:</div>
-                      <div className="col-5">Yes</div>
+                      <div className="col-5">{leave.is_station}</div>
                     </div>
                     <div className="row" style={{ border: "1px solid" }}>
                       <div className="col-6">छुट्टी के दौरान का ऩता<br />
                         Address during the leave/on duty</div>
                       <div className="col-1">:</div>
-                      <div className="col-5">Bathinda, Punjab</div>
+                      <div className="col-5"></div>
                     </div>
 
                     <div className="row leave-details-signature">
@@ -283,9 +284,9 @@ export default function DisplayLeaves() {
                       <div className="col-4">Balance / <br />शेष</div>
                     </div>
                     <div className="row">
-                      <div className="col-4" style={{ border: "1px solid" }}>7</div>
-                      <div className="col-4" style={{ border: "1px solid" }}>3</div>
-                      <div className="col-4" style={{ border: "1px solid" }}>4</div>
+                      <div className="col-4" style={{ border: "1px solid" }}>{leave[leave.key1] - leave[leave.key2]}</div>
+                      <div className="col-4" style={{ border: "1px solid" }}>{leave.duration}</div>
+                    <div className="col-4" style={{ border: "1px solid" }}>{leave[leave.key1] - leave[leave.key2]}</div>
                     </div>
                     <br />
                     <div className="row">
@@ -311,8 +312,7 @@ export default function DisplayLeaves() {
                     <div className="row">
                       <div className="col-4"></div>
                       <div className="col-8">
-                        <br />
-                        <br />
+                        <p>{leave.authority_comment}</p>
                         छुट्टी प्रदान करनेके लऱए सऺम प्रालधकारी की दटप्ऩणी: मवीकृ त/अमवीकृ त<br />
                         Comments of the competent authority to grant leave: Sanctioned / Not Sanctioned
                       </div>
@@ -322,13 +322,14 @@ export default function DisplayLeaves() {
                     <div className="row">
                       <div className="col-4"></div>
                       <div className="col-8">
-                        <br />
-                        <br />
+                        <p>{leave.status}</p>
                         (त्रवभागाध्यऺ / कु ऱसलिव / अलधष्ठाता (सॊकाय मामऱेएवॊप्रशासन) / लनदेशक)<br />
                         (HoD / Registrar / Dean(Faculty Affairs & Administration) )
                       </div>
                     </div>
                   </div>
+                  <hr />
+                  <p>Attached Documents: <a target="_blank" href={leave.attached_documents}>Link</a></p>
                 </div>
               </div>
               <div className="modal-footer">

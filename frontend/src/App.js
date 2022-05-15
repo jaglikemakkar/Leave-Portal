@@ -50,7 +50,7 @@ function App() {
             <>
               <Route path="/dashboard" exact element={<Dashboard  user = {user} />} />
               <Route path="/leaveForm" exact element={<LeaveForm user={user} />} />
-              <Route path="/displayLeaves" exact element={<DisplayLeaves />} />
+              <Route path="/displayLeaves" exact element={<DisplayLeaves user={user}/>} />
               <Route path="/checkLeaves" exact element={<CheckLeaves user = {user} />} />
             </>
           )}

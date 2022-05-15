@@ -77,7 +77,7 @@ def insert_leave(l):
     cursor.execute("INSERT INTO leaves\
         (department, user_id, nature, purpose, is_station, request_date, start_date, end_date, duration, status, level,file_uploaded) \
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)",
-        (department, user_id, l['nature'], l['purpose'], l['isStation'], l['rdate'], l['sdate'], l['edate'], l['duration'], 'Pending', position,l['docc']))
+        (department, user_id, l['nature'], l['purpose'], l['isStation'], l['rdate'], l['sdate'], l['edate'], l['duration'], 'Pending', position,l['attached_documents']))
     connect.commit()
     return 1
 
@@ -222,7 +222,7 @@ from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 import os,shutil
 
-access_token = "ya29.A0ARrdaM-8QJ_S9aKWmyilK53YTUsf3siX1f2TeS_zf7bgEEc8wDILzgzYQ8hkX7EGaMpdpTL37o-wF1LV1RLSl7ITHN6CrjhlbCpP-w2ExEIqtFRkf-PGUkP2m7f-x7xC1oVDTTctwX482ytbEmmk5QJYJf1t"
+access_token = "ya29.A0ARrdaM-BTK6DDx03gymxsh-rSpv17u5OFSZ4i13QxStm4UJLpj3bed0191DYcyQPXRM_avdZso9NuRCVyIfbgmD1CCrcfZcD3PzfYEG2OCmSu4-a0M8WIpRzjZjbZwesdDThlLWULOkf8xyYDReXf10qtwJL"
 
 import json
 import requests
@@ -230,14 +230,17 @@ class GoogleDrive:
     def __init__(self,access_token):
         self.headers = {"Authorization": "Bearer {}".format(access_token)}
     def uploadFile(self,file_path, filename):
-        para = {"name": filename} # name of the file after upoading
+        para = {"name": filename, "parents": ["1ylWUFqR6s5QadjELxCodWAo6qIwXr4MD"]} # name of the file after upoading
         files = {
             'data': ('metadata', json.dumps(para), 'application/json; charset=UTF-8'),
             'file': open(file_path, "rb")
         }
         r = requests.post("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",headers=self.headers,files=files)
         print(r.text)
-        return
+        
+        file_link = "https://drive.google.com/file/d/"+r.json()['id']+"/view?usp=sharing"
+        print("File Link", file_link)
+        return file_link
 
 GD = GoogleDrive(access_token)
 # GD.uploadFile("C:\\Users\\ACER\\3D Objects\\Leave-Portal-main\\server\\Invoice- April Cycle.pdf")
@@ -352,7 +355,8 @@ def leave_application():
         ff.save(os.getcwd()+'\\files\\' + file_name)
         dataa['docc'] = os.getcwd()+'.\\files\\' + file_name
         # upload(dataa['docc'],file_name)
-        GD.uploadFile(dataa['docc'], file_name)
+        attached_documents = GD.uploadFile(dataa['docc'], file_name)
+        dataa['attached_documents'] = attached_documents
         empty_the_folder(os.getcwd()+'\\files')
 
     else:
@@ -367,7 +371,6 @@ def leave_application():
 def dashboard():
     print('Dashboard' , session)
     data = get_user_dic(session['user_info']['email'])
-    print("HHHHH", data)
     return jsonify(data)
 
 @app.route('/fetchLeaves', methods = ['POST'])
@@ -382,9 +385,31 @@ def fetchLeaves():
     payload = []
     for i in data:
         # department, user_id, nature, purpose, is_station, request_date, start_date, end_date, duration, status, level
-        content = {'id': i[0], 'department': i[1], 'user_id': i[2],'nature': i[3],'purpose': i[4],'is_station': i[5],'request_date': i[6],'start_date': i[7],'end_date': i[8], 'authority_comment': i[9], 'duration': i[10],'status': i[11],'level': i[12],  'file_uploaded':i[13]}
-        payload.append(content)
+        content = {'id': i[0], 'department': i[1], 'user_id': i[2],'nature': i[3],'purpose': i[4],'is_station': i[5],'request_date': i[6],'start_date': i[7],'end_date': i[8], 'authority_comment': i[9], 'duration': i[10],'status': i[11],'level': i[12], 'attached_documents': i[13]}
+        user_id = i[2]
+        connect = db.connect()
+        cursor = connect.cursor()
+        cursor.execute('SELECT email_id FROM user WHERE user_id = %s',(user_id))
+        data = cursor.fetchall()
+        email = data[0][0]
+        cur_user = get_user_dic(email)
+        content['email'] = cur_user['email']
+        content['name'] = cur_user['name']
+        nature = i[3]
+        c_st1 = "Total " + nature + 's'
+        c_st2 = "Taken " + nature + 's'
+        nature = nature.lower().split()
+        nature = '_'.join(nature)
+        u_st1 = 'total_' + nature + 's'
+        u_st2 = 'taken_' + nature + 's'
         
+        content[c_st1] = cur_user[u_st1]
+        content[c_st2] = cur_user[u_st2]
+        content["key1"] = c_st1
+        content["key2"] = c_st2
+        
+        payload.append(content)
+
     return jsonify(result=payload)
 
 @app.route('/check_leaves',methods = ['GET','POST'])
@@ -407,7 +432,7 @@ def check_leaves():
     payload = []
 
     for i in leaves:
-        content = {'id': i[0], 'department': i[1], 'user_id': i[2],'nature': i[3],'purpose': i[4],'is_station': i[5],'request_date': i[6],'start_date': i[7],'end_date': i[8], 'authority_comment': i[9], 'duration': i[10],'status': i[11],'level': i[12]}
+        content = {'id': i[0], 'department': i[1], 'user_id': i[2],'nature': i[3],'purpose': i[4],'is_station': i[5],'request_date': i[6],'start_date': i[7],'end_date': i[8], 'authority_comment': i[9], 'duration': i[10],'status': i[11],'level': i[12], 'attached_documents': i[13]}
         user_id = i[2]
         connect = db.connect()
         cursor = connect.cursor()
@@ -475,7 +500,6 @@ def approve_leave():
     data = cursor.fetchall()[0]
     taken_cnt = float(data[0]) + duration
     if (nature == "casual_leave" or nature == "restricted_leave") and user['position']=='hod':
-        print("HHHHHHHHHHHHHHHH")
         query = "Update user set %s = %s where user_id = %s" % (u_st2, taken_cnt, user_id)
         cursor.execute(query)
     elif nature != "casual_leave" and nature != "reastricted_leave" and user['position']=='dean':
