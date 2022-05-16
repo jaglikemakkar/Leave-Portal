@@ -225,35 +225,35 @@ export default function DisplayLeaves({ user }) {
                       <div className="col-5">{leave.department.toUpperCase()}</div>
                     </div>
                     <div className="row" style={{ border: "1px solid" }}>
-                      <div className="col-6">आवश्यक छुट्टी का मवरूऩ : आकस्ममक छुट्टी / राज.अव./त्रव.आ.छुट्टी <br />Nature of Leave
+                      <div className="col-6">आवश्यक छुट्टी का स्वरूप : आकस्मिक छुट्टी / राज.अव./वि.आ.छुट्टी <br />Nature of Leave
                         Required : CL / RH / SCL/ ON DUTY</div>
                       <div className="col-1">:</div>
                       <div className="col-5">{leave.nature}</div>
                     </div>
                     <div className="row" style={{ border: "1px solid" }}>
                       <div className="col-6">उद्देश्य / Purpose
-                        (के वऱ त्रवशेष आकस्ममक छुट्टी के लऱए लनमॊिण ऩि की प्रलत सॊऱगन करं)
+                        (केवल विशेष आकस्मिक छुट्टी के लिये निमंत्रण पत्र की प्रती सलगन करे)
                         /<br />
                         (Copy of the invitation letter enclosed in case of SCL only)</div>
                       <div className="col-1">:</div>
                       <div className="col-5">{leave.purpose}</div>
                     </div>
                     <div className="row" style={{ border: "1px solid" }}>
-                      <div className="col-6">कऺाएॊ, प्रशासलनक स्जम्मेदारी आदद (यदद कोई हो तो) के लऱए वैकस्पऩक
-                        व्यवमथा /<br />
+                      <div className="col-6">कक्षाएं, प्रशासनिक जिम्मेदारी आदि (यदि कोई हो तो) के लिए वैकल्पिक व्यवस्था /
+                        /<br />
                         Alternative arrangements for classes, administrative responsibilities,
                         etc. (if any)</div>
                       <div className="col-1">:</div>
                       <div className="col-5">These are alternative arrangements</div>
                     </div>
                     <div className="row" style={{ border: "1px solid" }}>
-                      <div className="col-6">क्या मटेशन छोडना अऩेस्ऺत है?<br />
+                      <div className="col-6">क्या स्टेशन छोड़ना अपेक्षित है?<br />
                         Whether Station leave is required?</div>
                       <div className="col-1">:</div>
                       <div className="col-5">{leave.is_station}</div>
                     </div>
                     <div className="row" style={{ border: "1px solid" }}>
-                      <div className="col-6">छुट्टी के दौरान का ऩता<br />
+                      <div className="col-6">छुट्टी के दौरान का पता<br />
                         Address during the leave/on duty</div>
                       <div className="col-1">:</div>
                       <div className="col-5"></div>
@@ -264,7 +264,7 @@ export default function DisplayLeaves({ user }) {
                       <div className="col-6">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Signature_of_Ann_Miller.svg/1280px-Signature_of_Ann_Miller.svg.png"
                           witdh="80px" height="80px" /><br />
-                        आवेदक के हमताऺर ददनाॊक सदहत/Signature with date of the applicant
+                          आवेदन के हस्ताक्षर दिनांक सहित/Signature with date of the applicant
                       </div>
 
                     </div>
@@ -276,11 +276,11 @@ export default function DisplayLeaves({ user }) {
 
                 <div className='container' id={"second-page-" + leave.id}>
                   <div className="establishment-office text-center" id={"leave-footer-" + leave.id}>
-                    <p><b>त्रवभाग कायााऱय / प्रशासलनक अनुभाग द्वारा प्रयोग हेतु/ For use by the Department Office /
+                    <p><b>विभाग कार्यालय/ प्रशासनिक अनुभाग द्वारा प्रयोग हेतु/ For use by the Department Office /
                       Establishment Section</b></p>
                     <div className="row" style={{ border: "1px solid" }}>
                       <div className="col-4">Balance as on Date /<br />आज तक शेष</div>
-                      <div className="col-4">Leave Applied For (No. of days) /<br />छुट्टी के लऱए आवेदन (ददन)</div>
+                      <div className="col-4">Leave Applied For (No. of days) /<br />छुट्टी के लिए आवेदन(दिन)</div>
                       <div className="col-4">Balance / <br />शेष</div>
                     </div>
                     <div className="row">
@@ -295,14 +295,14 @@ export default function DisplayLeaves({ user }) {
                         <br />
                         <br />
                         <br />
-                        सॊबॊलधत सहायक (त्रवभाग)/(मथाऩना)/Dealing Asstt. (Deptt.)/(Estt.)
+                        संबंधित सहायक(विभाग)/(स्थापना)/Dealing Asstt. (Deptt.)/(Estt.)
                       </div>
                       <div className="col-6">
 
                         <br />
                         <br />
                         <br />
-                        अधी./सहा.कु ऱसलिव/उऩकु ऱसलिव/Supdt./AR/DR
+                        अधी./सहा. कुलसचिव/उपकुलसचिव/Supdt./AR/DR
                       </div>
 
                     </div>
@@ -313,7 +313,7 @@ export default function DisplayLeaves({ user }) {
                       <div className="col-4"></div>
                       <div className="col-8">
                         <p>{leave.authority_comment}</p>
-                        छुट्टी प्रदान करनेके लऱए सऺम प्रालधकारी की दटप्ऩणी: मवीकृ त/अमवीकृ त<br />
+                        छुट्टी प्रदान करने के लिए सक्षम प्राधिकारी की टिप्पणी: स्वीकृत/अस्वीकृत<br />
                         Comments of the competent authority to grant leave: Sanctioned / Not Sanctioned
                       </div>
                     </div>
@@ -323,7 +323,7 @@ export default function DisplayLeaves({ user }) {
                       <div className="col-4"></div>
                       <div className="col-8">
                         <p>{leave.status}</p>
-                        (त्रवभागाध्यऺ / कु ऱसलिव / अलधष्ठाता (सॊकाय मामऱेएवॊप्रशासन) / लनदेशक)<br />
+                        (विभागाध्यक्ष/ कुलसचिव/ अधिष्ठता (संकाय मामले एव प्रशासन) / निदेशक)<br />
                         (HoD / Registrar / Dean(Faculty Affairs & Administration) )
                       </div>
                     </div>
@@ -346,4 +346,4 @@ export default function DisplayLeaves({ user }) {
 
     // </div >
   )
-}
+}   
