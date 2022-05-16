@@ -9,4 +9,4 @@ The faculties and staff members can fill the leave application form online and v
 
 
 To install the required modules and libraries
->> pip install requirements.txt 
+> pip install requirements.txt 
