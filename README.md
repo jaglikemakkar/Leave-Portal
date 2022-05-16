@@ -38,12 +38,15 @@ To install the required modules and libraries
 
 To run the frontend
 > cd frontend
+
 > npm install
+
 > npm start
 
 
 To run the server
 > cd server
+
 > python app.py
 
 
