@@ -208,6 +208,7 @@ export default function LeaveForm({ user }) {
               <legend htmlFor="form_edate">End Date</legend>
               <input type="date" id="form_edate" placeholder="Pick end date" className="form-control" defaultValue={state.edate} required></input>
             </div>
+
           </div>
 
           <div className="form-group">
@@ -222,7 +223,8 @@ export default function LeaveForm({ user }) {
             </textarea>
           </div>
 
-          <div style={{ padding: 20 }}>
+          <div className='form-group'>
+            <legend htmlFor="form_altArrangements">Attach a PDF Document</legend>
             <input type="file" name="file" onChange={onFileChange} />
           </div>
 

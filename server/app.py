@@ -291,6 +291,7 @@ OriginalOTP = -1
 def send_otp(email):
     global OriginalOTP
     OTP = random.randint(10**5,10**6-1)
+    session['otp'] = OTP
     OriginalOTP = OTP
     msg = "Your OTP for IIT Rpr Leave Management Portal is " + str(OTP)
     s = smtplib.SMTP('smtp.gmail.com', 587)
@@ -312,8 +313,8 @@ def login_otp():
 @app.route('/validate_otp' , methods = ['POST'])
 def validate_otp():
     otp = request.json['otp']
-    print(otp , OriginalOTP,'==================')
-    if str(otp) == str(OriginalOTP):
+    print(otp , session['otp'],'==================')
+    if str(otp) == str(session['otp']):
         
         session['logged_in'] = True
         session['user_info']['imageUrl'] = ""
@@ -361,6 +362,8 @@ def leave_application():
 
     else:
         dataa['docc'] = ""
+        dataa['attached_documents'] = ""
+    print("HHHHHHHHHHHHHHHH", dataa['docc'])
     status = insert_leave(dataa)
     if status:
         return success_code

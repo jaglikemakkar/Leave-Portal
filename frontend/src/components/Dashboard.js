@@ -129,19 +129,32 @@ export default function Dashboard({ user }) {
                     <div className="col-sm-6">
                       <h6 className="mb-0"><b>Leave Type</b></h6>
                     </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0"><b>Total</b></h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0"><b>Taken</b></h6>
-                    </div>
-                    <div className="col-sm-2">
+                    <div className="col-sm-3">
                       <h6 className="mb-0"><b>Remaining</b></h6>
+                    </div>
+                    <div className="col-sm-3">
+                      <h6 className="mb-0"><b>Taken</b></h6>
                     </div>
                   </div>
                   <hr />
+                  <div className='row'>
+                    <div className="col-sm-6">
+                      <h6 className="mb-0">Casual Leaves</h6>
+                    </div>
+                    <div className="col-sm-6">
 
-                  <div className="row">
+                      <div class="progress">
+                        <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_casual_leaves * 100) / user_data.total_casual_leaves) + "%" }}>
+                          Remaining - {user_data.total_casual_leaves - user_data.taken_casual_leaves}
+                        </div>
+                        <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_casual_leaves) * 100) / user_data.total_casual_leaves + "%" }}>
+                          Taken - {user_data.taken_casual_leaves}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
+                  {/* <div className="row">
                     <div className="col-sm-6">
                       <h6 className="mb-0">Casual Leaves</h6>
                     </div>
@@ -155,20 +168,22 @@ export default function Dashboard({ user }) {
                       <h6 className="mb-0">{user_data.total_casual_leaves - user_data.taken_casual_leaves}</h6>
                     </div>
 
-                  </div>
-                  <hr />
+                  </div> */}
+
                   <div className="row">
                     <div className="col-sm-6">
                       <h6 className="mb-0">Restricted Leaves</h6>
                     </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_restricted_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.taken_restricted_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_restricted_leaves - user_data.taken_restricted_leaves}</h6>
+                    <div className="col-sm-6">
+
+                      <div class="progress">
+                        <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_restricted_leaves * 100) / user_data.total_restricted_leaves) + "%" }}>
+                          Remaining - {user_data.total_restricted_leaves - user_data.taken_restricted_leaves}
+                        </div>
+                        <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_restricted_leaves) * 100) / user_data.total_restricted_leaves + "%" }}>
+                          Taken - {user_data.taken_restricted_leaves}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <hr />
@@ -176,14 +191,16 @@ export default function Dashboard({ user }) {
                     <div className="col-sm-6">
                       <h6 className="mb-0">Earned Leaves</h6>
                     </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_earned_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.taken_earned_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_earned_leaves - user_data.taken_earned_leaves}</h6>
+                    <div className="col-sm-6">
+
+                      <div class="progress">
+                        <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_earned_leaves * 100) / user_data.total_earned_leaves) + "%" }}>
+                          Remaining - {user_data.total_earned_leaves - user_data.taken_earned_leaves}
+                        </div>
+                        <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_earned_leaves) * 100) / user_data.total_earned_leaves + "%" }}>
+                          Taken - {user_data.taken_earned_leaves}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <hr />
@@ -191,18 +208,36 @@ export default function Dashboard({ user }) {
                     <div className="col-sm-6">
                       <h6 className="mb-0">Vacation Leaves</h6>
                     </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_vacation_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.taken_vacation_leaves}</h6>
-                    </div>
-                    <div className="col-sm-2">
-                      <h6 className="mb-0">{user_data.total_vacation_leaves - user_data.taken_vacation_leaves}</h6>
+                    <div className="col-sm-6">
+
+                      <div class="progress">
+                        <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_vacation_leaves * 100) / user_data.total_vacation_leaves) + "%" }}>
+                          Remaining - {user_data.total_vacation_leaves - user_data.taken_vacation_leaves}
+                        </div>
+                        <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_vacation_leaves) * 100) / user_data.total_vacation_leaves + "%" }}>
+                          Taken - {user_data.taken_vacation_leaves}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <hr />
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <h6 className="mb-0">Study Leaves</h6>
+                    </div>
+                    <div className="col-sm-6">
 
+                      <div class="progress">
+                        <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_study_leaves * 100) / user_data.total_study_leaves) + "%" }}>
+                          Remaining - {user_data.total_study_leaves - user_data.taken_study_leaves}
+                        </div>
+                        <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_study_leaves) * 100) / user_data.total_study_leaves + "%" }}>
+                          Taken - {user_data.taken_study_leaves}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr />
                   {/* <div className="row">
                     <div className="col-sm-3">
                       <h6 className="mb-0">Address</h6>
