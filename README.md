@@ -20,6 +20,17 @@ The faculties and staff members can fill the leave application form online and v
 
 
 
+## Technologies/Tools used
+
+Frontend: React
+Backend: Flask
+Database: MySql, Google drive
+Deployment: Heroku (Backend), Vercel (Frontend)
+
+
+
+
+## How to run the App
 
 To install the required modules and libraries
 > pip install requirements.txt 
