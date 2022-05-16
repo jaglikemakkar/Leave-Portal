@@ -1,16 +1,17 @@
 # Leave-Portal
 
 
-## Submitted By and To
+## Submitted By
 Group X8
 
-Members:
-Apurv Rathore         2019CSB1077
-Sangram Jagadale   2019CSB1091
-Jaglike Makkar         2019CSB1092
+Members:<br>
+Apurv Rathore         2019CSB1077<br>
+Sangram Jagadale   2019CSB1091<br>
+Jaglike Makkar         2019CSB1092<br>
 
-Mentor: Dr. Puneet Goyal 
-(Department of Computer Science and Engineering, IIT Ropar)
+## Submitted To
+Dr. Puneet Goyal <br>
+(Department of Computer Science and Engineering, IIT Ropar)<br>
 
 
 
@@ -22,10 +23,10 @@ The faculties and staff members can fill the leave application form online and v
 
 ## Technologies/Tools used
 
-Frontend: React
-Backend: Flask
-Database: MySql, Google drive
-Deployment: Heroku (Backend), Vercel (Frontend)
+Frontend: React<br>
+Backend: Flask<br>
+Database: MySql, Google drive<br>
+Deployment: Heroku (Backend), Vercel (Frontend)<br>
 
 
 
