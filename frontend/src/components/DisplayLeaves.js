@@ -53,7 +53,7 @@ export default function DisplayLeaves({ user }) {
     const input = document.getElementById("first-page-" + leave_id);
     html2canvas(input, {
       letterRendering: 1,
-      allowTaint : true,
+      allowTaint: true,
       logging: true,
       useCORS: true
     })
@@ -69,7 +69,6 @@ export default function DisplayLeaves({ user }) {
         const input1 = document.getElementById("second-page-" + leave_id);
         html2canvas(input1)
           .then((canvas) => {
-            pdf.save(`${"temp-" + leave_id}.pdf`)
             // document.getElementById("leave-container-" + leave_id).parentNode.style.overflow = 'hidden';
 
             var imgData = canvas.toDataURL('image/png');
@@ -264,7 +263,7 @@ export default function DisplayLeaves({ user }) {
                       <div className="col-6">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Signature_of_Ann_Miller.svg/1280px-Signature_of_Ann_Miller.svg.png"
                           witdh="80px" height="80px" /><br />
-                          आवेदन के हस्ताक्षर दिनांक सहित/Signature with date of the applicant
+                        आवेदन के हस्ताक्षर दिनांक सहित/Signature with date of the applicant
                       </div>
 
                     </div>
@@ -286,7 +285,7 @@ export default function DisplayLeaves({ user }) {
                     <div className="row">
                       <div className="col-4" style={{ border: "1px solid" }}>{leave[leave.key1] - leave[leave.key2]}</div>
                       <div className="col-4" style={{ border: "1px solid" }}>{leave.duration}</div>
-                    <div className="col-4" style={{ border: "1px solid" }}>{leave[leave.key1] - leave[leave.key2]}</div>
+                      <div className="col-4" style={{ border: "1px solid" }}>{leave[leave.key1] - leave[leave.key2]}</div>
                     </div>
                     <br />
                     <div className="row">
@@ -329,7 +328,12 @@ export default function DisplayLeaves({ user }) {
                     </div>
                   </div>
                   <hr />
-                  <p>Attached Documents: <a target="_blank" href={leave.attached_documents}>Link</a></p>
+                  {(leave.attached_documents == "" || leave.attached_documents == undefined) ? (
+                    <p>Attached Documents: No document attached</p>
+                  ) : (
+                    <p>Attached Documents: <a target="_blank" href={leave.attached_documents}>Link</a></p>
+                  )
+                  }
                 </div>
               </div>
               <div className="modal-footer">

@@ -222,7 +222,7 @@ from pydrive.drive import GoogleDrive
 from pydrive.auth import GoogleAuth
 import os,shutil
 
-access_token = "ya29.A0ARrdaM-BTK6DDx03gymxsh-rSpv17u5OFSZ4i13QxStm4UJLpj3bed0191DYcyQPXRM_avdZso9NuRCVyIfbgmD1CCrcfZcD3PzfYEG2OCmSu4-a0M8WIpRzjZjbZwesdDThlLWULOkf8xyYDReXf10qtwJL"
+access_token = "ya29.A0ARrdaM-5wVuIL8TgP48E5-g7zB7MGPzRQPNzW2U2soXr-Q9L0UEudP680MClxvrT2_0aS4GdZVuGBmI6QO7etyaIe9nvM9sANlT4mAGNWq4xloXC77DWAR59LquOY_k5wCaa2LnM2PsSqCwM3Z13wSMdnotE"
 
 import json
 import requests
@@ -298,6 +298,7 @@ def send_otp(email):
     s.starttls()
     s.login("sangramjagadale2017@gmail.com", "ifitfwphppuwtgfl")
     s.sendmail('IIT Rpr Leave OTP',email,msg)
+    print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHH", session['otp'])
 
 @app.route('/login_otp', methods = ['POST'])
 def login_otp():
@@ -338,7 +339,10 @@ def get_current_user():
         data['department'] = user_data[4]
         data['total_leaves'] = user_data[5]
         data['av_leaves'] = user_data[6]
-        data['imageURL'] = session['user_info']['imageUrl']
+        if 'imageUrl' in 'user_info':
+            data['imageURL'] = session['user_info']['imageUrl']
+        else:
+            data['imageURL'] = ""
 
         return jsonify(data)
     else:
@@ -458,9 +462,11 @@ def check_leaves():
         content["key1"] = c_st1
         content["key2"] = c_st2
         if position == 'dean':
-            if nature == "casual_leave" or nature == "restricted_leave":
+            if (nature=="casual_leave" or nature=="restricted_leave") and (content['level'] == 'hod'):
+                payload.append(content)
+            elif nature == "casual_leave" or nature == "restricted_leave":
                 continue
-            if content['status'] == 'Approved By Hod' or content['status'] == 'Approved By Dean' or content['status'] == 'Disapproved By Dean':
+            elif content['status'] == 'Approved By Hod' or content['status'] == 'Approved By Dean' or content['status'] == 'Disapproved By Dean':
                 payload.append(content)
         elif position == 'hod':
             payload.append(content)
@@ -502,10 +508,10 @@ def approve_leave():
     cursor.execute(query)
     data = cursor.fetchall()[0]
     taken_cnt = float(data[0]) + duration
-    if (nature == "casual_leave" or nature == "restricted_leave") and user['position']=='hod':
+    if (nature == "casual_leave" or nature == "restricted_leave") and (user['position']=='hod' or user['position']=='dean'):
         query = "Update user set %s = %s where user_id = %s" % (u_st2, taken_cnt, user_id)
         cursor.execute(query)
-    elif nature != "casual_leave" and nature != "reastricted_leave" and user['position']=='dean':
+    elif nature != "casual_leave" and nature != "restricted_leave" and user['position']=='dean':
         query = "Update user set %s = %s where user_id = %s" % (u_st2, taken_cnt, user_id)
         cursor.execute(query)
     connect.commit()

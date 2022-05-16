@@ -88,7 +88,7 @@ export default function Dashboard({ user }) {
                       <p className="text-secondary mb-1">{user_data.department.toUpperCase()}</p>
                       <p className="text-muted font-size-sm">{user_data.email}</p>
                       {/* <button className="btn btn-primary">Follow</button> */}
-                      {(user_data.position == "faculty" || user_data.position == "staff" || user_data.position == undefined || user_data.position == "") ? (
+                      {(user_data.position == "faculty" || user_data.position == "staff" || user_data.position == "hod") ? (
                         <a href="leaveForm" style={{ margin: "10px" }}>
                           <button className="btn btn-outline-primary">Apply Leave</button>
                         </a>
@@ -123,38 +123,39 @@ export default function Dashboard({ user }) {
               </div> */}
             </div>
             <div className="col-md-8">
-              <div className="card mb-3" style={{ "border": "2px solid grey" }}>
-                <div className="card-body" >
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <h6 className="mb-0"><b>Leave Type</b></h6>
+              {(user_data.position == "admin") ? ('') : (
+                <div className="card mb-3" style={{ "border": "2px solid grey" }}>
+                  <div className="card-body" >
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <h6 className="mb-0"><b>Leave Type</b></h6>
+                      </div>
+                      <div className="col-sm-3">
+                        <h6 className="mb-0"><b>Remaining</b></h6>
+                      </div>
+                      <div className="col-sm-3">
+                        <h6 className="mb-0"><b>Taken</b></h6>
+                      </div>
                     </div>
-                    <div className="col-sm-3">
-                      <h6 className="mb-0"><b>Remaining</b></h6>
-                    </div>
-                    <div className="col-sm-3">
-                      <h6 className="mb-0"><b>Taken</b></h6>
-                    </div>
-                  </div>
-                  <hr />
-                  <div className='row'>
-                    <div className="col-sm-6">
-                      <h6 className="mb-0">Casual Leaves</h6>
-                    </div>
-                    <div className="col-sm-6">
+                    <hr />
+                    <div className='row'>
+                      <div className="col-sm-6">
+                        <h6 className="mb-0">Casual Leaves</h6>
+                      </div>
+                      <div className="col-sm-6">
 
-                      <div class="progress">
-                        <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_casual_leaves * 100) / user_data.total_casual_leaves) + "%" }}>
-                          Remaining - {user_data.total_casual_leaves - user_data.taken_casual_leaves}
-                        </div>
-                        <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_casual_leaves) * 100) / user_data.total_casual_leaves + "%" }}>
-                          Taken - {user_data.taken_casual_leaves}
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_casual_leaves * 100) / user_data.total_casual_leaves) + "%" }}>
+                            Remaining - {user_data.total_casual_leaves - user_data.taken_casual_leaves}
+                          </div>
+                          <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_casual_leaves) * 100) / user_data.total_casual_leaves + "%" }}>
+                            Taken - {user_data.taken_casual_leaves}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <hr />
-                  {/* <div className="row">
+                    <hr />
+                    {/* <div className="row">
                     <div className="col-sm-6">
                       <h6 className="mb-0">Casual Leaves</h6>
                     </div>
@@ -170,75 +171,75 @@ export default function Dashboard({ user }) {
 
                   </div> */}
 
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <h6 className="mb-0">Restricted Leaves</h6>
-                    </div>
-                    <div className="col-sm-6">
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <h6 className="mb-0">Restricted Leaves</h6>
+                      </div>
+                      <div className="col-sm-6">
 
-                      <div class="progress">
-                        <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_restricted_leaves * 100) / user_data.total_restricted_leaves) + "%" }}>
-                          Remaining - {user_data.total_restricted_leaves - user_data.taken_restricted_leaves}
-                        </div>
-                        <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_restricted_leaves) * 100) / user_data.total_restricted_leaves + "%" }}>
-                          Taken - {user_data.taken_restricted_leaves}
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_restricted_leaves * 100) / user_data.total_restricted_leaves) + "%" }}>
+                            Remaining - {user_data.total_restricted_leaves - user_data.taken_restricted_leaves}
+                          </div>
+                          <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_restricted_leaves) * 100) / user_data.total_restricted_leaves + "%" }}>
+                            Taken - {user_data.taken_restricted_leaves}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <h6 className="mb-0">Earned Leaves</h6>
-                    </div>
-                    <div className="col-sm-6">
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <h6 className="mb-0">Earned Leaves</h6>
+                      </div>
+                      <div className="col-sm-6">
 
-                      <div class="progress">
-                        <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_earned_leaves * 100) / user_data.total_earned_leaves) + "%" }}>
-                          Remaining - {user_data.total_earned_leaves - user_data.taken_earned_leaves}
-                        </div>
-                        <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_earned_leaves) * 100) / user_data.total_earned_leaves + "%" }}>
-                          Taken - {user_data.taken_earned_leaves}
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_earned_leaves * 100) / user_data.total_earned_leaves) + "%" }}>
+                            Remaining - {user_data.total_earned_leaves - user_data.taken_earned_leaves}
+                          </div>
+                          <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_earned_leaves) * 100) / user_data.total_earned_leaves + "%" }}>
+                            Taken - {user_data.taken_earned_leaves}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <h6 className="mb-0">Vacation Leaves</h6>
-                    </div>
-                    <div className="col-sm-6">
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <h6 className="mb-0">Vacation Leaves</h6>
+                      </div>
+                      <div className="col-sm-6">
 
-                      <div class="progress">
-                        <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_vacation_leaves * 100) / user_data.total_vacation_leaves) + "%" }}>
-                          Remaining - {user_data.total_vacation_leaves - user_data.taken_vacation_leaves}
-                        </div>
-                        <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_vacation_leaves) * 100) / user_data.total_vacation_leaves + "%" }}>
-                          Taken - {user_data.taken_vacation_leaves}
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_vacation_leaves * 100) / user_data.total_vacation_leaves) + "%" }}>
+                            Remaining - {user_data.total_vacation_leaves - user_data.taken_vacation_leaves}
+                          </div>
+                          <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_vacation_leaves) * 100) / user_data.total_vacation_leaves + "%" }}>
+                            Taken - {user_data.taken_vacation_leaves}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <hr />
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <h6 className="mb-0">Study Leaves</h6>
-                    </div>
-                    <div className="col-sm-6">
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-6">
+                        <h6 className="mb-0">Study Leaves</h6>
+                      </div>
+                      <div className="col-sm-6">
 
-                      <div class="progress">
-                        <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_study_leaves * 100) / user_data.total_study_leaves) + "%" }}>
-                          Remaining - {user_data.total_study_leaves - user_data.taken_study_leaves}
-                        </div>
-                        <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_study_leaves) * 100) / user_data.total_study_leaves + "%" }}>
-                          Taken - {user_data.taken_study_leaves}
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" style={{ "width": 100 - ((user_data.taken_study_leaves * 100) / user_data.total_study_leaves) + "%" }}>
+                            Remaining - {user_data.total_study_leaves - user_data.taken_study_leaves}
+                          </div>
+                          <div class="progress-bar bg-danger" role="progressbar" style={{ "width": ((user_data.taken_study_leaves) * 100) / user_data.total_study_leaves + "%" }}>
+                            Taken - {user_data.taken_study_leaves}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <hr />
-                  {/* <div className="row">
+                    <hr />
+                    {/* <div className="row">
                     <div className="col-sm-3">
                       <h6 className="mb-0">Address</h6>
                     </div>
@@ -246,21 +247,34 @@ export default function Dashboard({ user }) {
                       Bay Area, San Francisco, CA
                     </div>
                   </div> */}
-                  {/* <hr /> */}
-                  <div className="row">
-                    <div className="col-sm-12" >
-                      {(user_data.position == "faculty" || user_data.position == "staff" || user_data.position == undefined || user_data.position == "") ? (
-                        <a className="btn btn-info " style={{ "margin": "2px" }} href="displayLeaves">Applied Leaves</a>
-                      ) : (
-                        <div>
-                          {/* <a className="btn btn-info " style={{ "margin": "2px" }} href="displayLeaves">Applied Leaves</a> */}
-                          <a className="btn btn-info " style={{ "margin": "2px" }} href="checkLeaves">Check Leaves</a>
-                        </div>
-                      )}
+                    {/* <hr /> */}
+                    <div className="row">
+                      <div className="col-sm-12" >
+                        {(user_data.position == "faculty" || user_data.position == "staff" || user_data.position == "hod") ? (
+
+                          (user_data.position == "hod") ? (
+                            <div>
+                              <a className="btn btn-info " style={{ "margin": "2px" }} href="displayLeaves">Applied Leaves</a>
+                              <a className="btn btn-info " style={{ "margin": "2px" }} href="checkLeaves">Check Leaves</a>
+                            </div>
+                          ) : (
+                            <div>
+                              <a a className="btn btn-info " style={{ "margin": "2px" }} href="displayLeaves">Applied Leaves</a>
+                            </div>
+                          )
+
+                        ) : (
+                          <div>
+                            {/* <a className="btn btn-info " style={{ "margin": "2px" }} href="displayLeaves">Applied Leaves</a> */}
+                            <a className="btn btn-info " style={{ "margin": "2px" }} href="checkLeaves">Check Leaves</a>
+                          </div>
+                        )}
+
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {(user_data.position == "admin" || user_data.position == "admin") ? (
                 <div className="card mb-3" style={{ "border": "2px solid grey" }}>
@@ -346,7 +360,7 @@ export default function Dashboard({ user }) {
         </div>
       </div>
 
-    </div>
+    </div >
   );
 }
 

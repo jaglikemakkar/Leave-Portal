@@ -42,12 +42,12 @@ function App() {
       <Navbar user={user} />
       <BrowserRouter>
         <Routes>
-          <Route path="/" exact element={<Intro />} />
           <Route path="/login" exact element={<LoginForm />} />
           <Route path="/otpVerification" exact element={<OtpVerification />} />
 
-          {(user.email == "" || user.email == undefined) ? ('') : (
+          {(user.email == "" || user.email == undefined) ? (<Route path="/" exact element={<LoginForm />} />) : (
             <>
+              <Route path="/" exact element={<Dashboard  user = {user}/>} />
               <Route path="/dashboard" exact element={<Dashboard  user = {user} />} />
               <Route path="/leaveForm" exact element={<LeaveForm user={user} />} />
               <Route path="/displayLeaves" exact element={<DisplayLeaves user={user}/>} />

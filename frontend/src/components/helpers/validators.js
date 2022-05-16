@@ -7,7 +7,7 @@ export const isEmail = (email)=>{
     return regex.test(email);
 }
 
-const phoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/;
+const phoneRegex = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 export const isPhone = (phone)=>{
     return phoneRegex.test(phone);
 }

@@ -8,7 +8,7 @@ export default function Navbar({ user }) {
     window.location.href = "/";
   }
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container">
         <a className="navbar-brand" href="#">Leave Portal</a>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -19,12 +19,12 @@ export default function Navbar({ user }) {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item px-2 active">
-              <a className="nav-link" href="/">Home <span className="sr-only">(current)</span></a>
+              <a className="nav-link" href="/" style={{"color": "white"}}>Home <span className="sr-only">(current)</span></a>
             </li>
-            {(user.email == "" || user.email == undefined) ? ('') : (<><li className="nav-item px-2"> <a className="nav-link" href="/dashboard">Dashboard</a> </li>
-            <li className="nav-item px-2 dropdown">
+            {(user.email == "" || user.email == undefined) ? ('') : (<><li className="nav-item px-2"> <a className="nav-link" href="/dashboard" style={{"color": "white"}}>Dashboard</a> </li>
+            <li className="nav-item px-2 dropdown" >
               <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                data-toggle="dropdown" aria-expanded="false">
+                data-toggle="dropdown" aria-expanded="false" style={{"color": "white"}} >
                 Navigate
               </a>
               <div className="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -49,14 +49,14 @@ export default function Navbar({ user }) {
           </ul>
           {(user.email == "" || user.email == undefined) ? (
             <ul className="navbar-nav justify-content-right">
-              <li className="nav-item px-2"> <a className="nav-link" href="login">Login</a> </li>
+              <li className="nav-item px-2"> <a className="nav-link" href="login" style={{"color": "white"}}>Login</a> </li>
               {/* <li className="nav-item px-2"> <a className="nav-link" href="register">Register</a> </li> */}
             </ul>
           ) :
             (
               <ul className="navbar-nav justify-content-right">
-                <li className="nav-item px-2"> <a className="nav-link" href="dashboard">{user.firstName}</a> </li>
-                <li className="nav-item px-2"> <a className="nav-link" href="#" onClick={logout}>Logout</a> </li>
+                <li className="nav-item px-2"> <a className="nav-link" href="dashboard" style={{"color": "white"}}>{user.firstName}</a> </li>
+                <li className="nav-item px-2"> <a className="nav-link" href="#" onClick={logout} style={{"color": "white"}}>Logout</a> </li>
               </ul>
             )}
         </div>

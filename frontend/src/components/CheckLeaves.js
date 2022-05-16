@@ -270,29 +270,34 @@ export default function CheckLeaves({ user }) {
                     </div>
                   </div>
                   <hr />
-                  <p>Attached Documents: <a target="_blank" href={leave.attached_documents}>Link</a></p>
+                  {(leave.attached_documents == "" || leave.attached_documents == undefined) ? (
+                    <p>Attached Documents: No document attached</p>
+                  ) : (
+                    <p>Attached Documents: <a target="_blank" href={leave.attached_documents}>Link</a></p>
+                  )
+                  }
                   <hr />
                 </div>
               </div>
-            <div className='text-center'>
-              <textarea id={"comment-" + leave.id} placeholder="Add Comment" style={{ "width": "250px" }}></textarea>
-            </div>
-            <div className="modal-footer">
-              {(leave.status == "Pending" || (user.level == "dean" && leave.status == "Approved By Hod")) ? (
-                <>
-                  <button type="button" className="btn btn-outline-success" onClick={() => { approveLeave(leave.id) }}>Approve</button>
-                  <button type="button" className="btn btn-outline-danger" onClick={() => { disapproveLeave(leave.id) }}>Disapprove</button>
-                </>
-              ) : (leave.status)
-              }
-              <button type="button" className="btn btn-outline-primary" onClick={() => { addComment(leave.id) }}>Add Comment</button>
-              <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+              <div className='text-center'>
+                <textarea id={"comment-" + leave.id} placeholder="Add Comment" style={{ "width": "250px" }}></textarea>
+              </div>
+              <div className="modal-footer">
+                {(leave.status == "Pending" || (user.level == "dean" && leave.status == "Approved By Hod")) ? (
+                  <>
+                    <button type="button" className="btn btn-outline-success" onClick={() => { approveLeave(leave.id) }}>Approve</button>
+                    <button type="button" className="btn btn-outline-danger" onClick={() => { disapproveLeave(leave.id) }}>Disapprove</button>
+                  </>
+                ) : (leave.status)
+                }
+                <button type="button" className="btn btn-outline-primary" onClick={() => { addComment(leave.id) }}>Add Comment</button>
+                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
             </div>
           </div>
         </div>
-        </div>
-  ))
-}
+      ))
+      }
 
     </div >
   )
