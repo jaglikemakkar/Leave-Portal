@@ -50,8 +50,52 @@ To run the server
 
 > python app.py
 
+## Directory Structure
 
-
-
-
-
++---frontend
+|   |   package-lock.json
+|   |   package.json
+|   |        
+|   \---src
+|       |   App.js
+|       |   App.test.js
+|       |   httpClient.js
+|       |   index.js
+|       |   logo.svg
+|       |   
+|       +---components
+|       |   |   CheckLeaves.js
+|       |   |   Dashboard.js
+|       |   |   DeanDashboard.js
+|       |   |   DisplayLeaves.js
+|       |   |   FacultyDashboard.js
+|       |   |   Footer.js
+|       |   |   Intro.js
+|       |   |   LeaveForm.js
+|       |   |   LoginForm.js
+|       |   |   Navbar.js
+|       |   |   OtpVerification.js
+|       |   |   Table.js
+|       |   |   
+|       |   \---helpers
+|       |           validators.js
+|       |           
+|       +---css
+|       |       App.css
+|       |       CheckLeaves.css
+|       |       Dashboard.css
+|       |       DisplayLeaves.css
+|       |       index.css
+|       |       LeaveForm.css
+|       |       Login.css
+|       |       Table.css
+|       |       
+|       \---imgs
+|               background.jpg
+|               background2.webp
+|               loginIcon.png
+|               
+\---server
+        app.py
+        client_secrets.json
+        
