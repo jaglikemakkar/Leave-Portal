@@ -47,6 +47,7 @@ failiure_code = Response(status=400)
 
 
 def is_valid_email(email_id):
+    #Function to check whether email is valid or not
     connect = db.connect()
     cursor = connect.cursor()
     cursor.execute("SELECT * FROM user WHERE email_id = %s",(email_id))
