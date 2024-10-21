@@ -5,6 +5,7 @@
 Group X8
 
 Members:<br>
+Goutam Sharma        2019MEB1258<br>
 Apurv Rathore         2019CSB1077<br>
 Sangram Jagadale   2019CSB1091<br>
 Jaglike Makkar         2019CSB1092<br>
